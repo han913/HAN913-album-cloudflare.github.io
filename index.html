@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>毕业纪念相册</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg: #fff7ec;
+      --card: rgba(255, 248, 238, 0.82);
+      --card-solid: #fff8ee;
+      --gold: #d89435;
+      --gold-dark: #8b551f;
+      --orange: #f58b42;
+      --brown: #3a2416;
+      --muted: #8b735c;
+      --line: rgba(170, 115, 55, 0.18);
+      --shadow: 0 18px 45px rgba(95, 62, 26, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      color: var(--brown);
+      background:
+        radial-gradient(circle at top left, rgba(255, 207, 132, 0.35), transparent 30%),
+        linear-gradient(180deg, #fff4e4 0%, #fffaf3 40%, #fff6ea 100%);
+      padding-bottom: 96px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 42px;
+      background: rgba(255, 248, 239, 0.78);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(160, 105, 45, 0.12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 21px;
+      color: var(--gold-dark);
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #f4b259, #8c4a19);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(155, 90, 28, 0.22);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      font-size: 15px;
+      color: #4d3927;
+    }
+
+    .nav a {
+      position: relative;
+      padding: 25px 0;
+    }
+
+    .nav a.active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 17px;
+      width: 22px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--orange);
+      transform: translateX(-50%);
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .search {
+      width: 230px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(170, 115, 55, 0.14);
+      color: #a18b75;
+      font-size: 13px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f6c17b, #fff);
+      display: grid;
+      place-items: center;
+      color: var(--gold-dark);
+      font-weight: 800;
+      border: 2px solid rgba(255, 255, 255, 0.88);
+      box-shadow: 0 8px 18px rgba(90, 60, 30, 0.16);
+    }
+
+    .hero {
+      position: relative;
+      min-height: 760px;
+      padding-top: 70px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(48, 28, 12, 0.1), rgba(255, 244, 226, 0.1)),
+        url("photos_v2/large/DSC4817_large.webp") center/cover no-repeat;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 55% 34%, rgba(255, 225, 160, 0.56), transparent 24%),
+        linear-gradient(180deg, rgba(255, 230, 194, 0.25) 0%, rgba(40, 20, 8, 0.22) 55%, rgba(255, 244, 226, 1) 100%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(1160px, calc(100% - 36px));
+      margin: 0 auto;
+      min-height: 690px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .hero-title {
+      margin: 60px 0 8px;
+      font-size: clamp(56px, 8vw, 112px);
+      line-height: 1;
+      letter-spacing: 4px;
+      font-family: "STKaiti", "KaiTi", "Microsoft YaHei", serif;
+      color: #6b3512;
+      text-shadow:
+        0 3px 0 rgba(255, 238, 206, 0.7),
+        0 18px 34px rgba(80, 38, 10, 0.22);
+    }
+
+    .hero-subtitle {
+      margin: 0 0 34px;
+      font-size: clamp(17px, 2vw, 24px);
+      color: #6b4427;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 16px rgba(255, 244, 220, 0.82);
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .hero-btn {
+      min-width: 150px;
+      height: 56px;
+      padding: 0 28px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero-btn.primary {
+      color: #fff;
+      background: linear-gradient(135deg, #f0ad4f, #d3772f);
+      box-shadow: 0 14px 32px rgba(190, 100, 34, 0.3);
+    }
+
+    .hero-btn.glass {
+      color: #fff8ef;
+      background: rgba(60, 38, 24, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-btn.light {
+      color: #704214;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(185, 125, 55, 0.18);
+      box-shadow: 0 10px 22px rgba(90, 60, 30, 0.12);
+    }
+
+    .hero-btn.surprise.playing {
+      color: #fff;
+      background: linear-gradient(135deg, #ffb05f, #ff7148);
+      box-shadow: 0 14px 32px rgba(255, 110, 66, 0.35);
+    }
+
+    .bubble {
+      position: absolute;
+      z-index: 3;
+      padding: 12px 18px;
+      border-radius: 18px;
+      color: #7a4a20;
+      background: rgba(255, 247, 235, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      box-shadow: 0 14px 32px rgba(95, 62, 26, 0.14);
+      backdrop-filter: blur(12px);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .bubble.b1 { left: 5%; top: 17%; }
+    .bubble.b2 { left: 7%; top: 39%; }
+    .bubble.b3 { right: 10%; top: 23%; }
+    .bubble.b4 { right: 8%; top: 44%; }
+    .bubble.b5 { left: 48%; top: 20%; }
+
+    .stats-panel {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      width: min(800px, calc(100% - 36px));
+      padding: 20px 28px;
+      border-radius: 26px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      color: #fff9ed;
+      background: rgba(42, 27, 17, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      box-shadow: 0 22px 54px rgba(60, 35, 15, 0.26);
+      backdrop-filter: blur(16px);
+    }
+
+    .stat {
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .stat:last-child {
+      border-right: none;
+    }
+
+    .stat span {
+      display: block;
+      font-size: 13px;
+      opacity: 0.82;
+      margin-bottom: 4px;
+    }
+
+    .stat strong {
+      font-size: 32px;
+      color: #ffd894;
+      letter-spacing: 1px;
+    }
+
+    .feature-row {
+      width: min(1180px, calc(100% - 36px));
+      margin: -8px auto 34px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .feature-card {
+      min-height: 138px;
+      padding: 20px;
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, rgba(255, 224, 171, 0.95), rgba(255, 255, 255, 0.78));
+      font-size: 22px;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .section {
+      width: min(1180px, calc(100% - 36px));
+      margin: 38px auto;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 30px;
+      color: #5b3218;
+      font-family: "STKaiti", "KaiTi", "Microsoft YaHei", serif;
+    }
+
+    .section-desc {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .more {
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid var(--line);
+      color: #7b552c;
+      font-size: 14px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .photo-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      min-height: 170px;
+      background: #eee;
+      box-shadow: 0 16px 34px rgba(80, 52, 24, 0.12);
+      cursor: pointer;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 170px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .photo-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .photo-card .caption {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(40, 25, 15, 0.48);
+      color: #fff;
+      font-size: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .timeline {
+      padding: 22px;
+      border-radius: 26px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-top: 18px;
+      text-align: center;
+      color: #6b4427;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 6px rgba(216, 148, 53, 0.15);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .timeline-item span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .content-split {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 22px;
+    }
+
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .post-card {
+      padding: 12px;
+      border-radius: 20px;
+      background: var(--card-solid);
+      border: 1px solid rgba(180, 120, 60, 0.12);
+      box-shadow: 0 14px 30px rgba(90, 60, 30, 0.1);
+    }
+
+    .post-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: #6c4b2c;
+    }
+
+    .post-user .face {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #f2c37b;
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .post-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 14px;
+      display: block;
+    }
+
+    .post-card p {
+      min-height: 38px;
+      margin: 10px 0 8px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .post-foot {
+      display: flex;
+      justify-content: space-between;
+      color: #9a7452;
+      font-size: 12px;
+    }
+
+    .star-river {
+      min-height: 330px;
+      padding: 24px;
+      border-radius: 28px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(255, 155, 80, 0.45), transparent 20%),
+        linear-gradient(135deg, #31294f, #1e2441 60%, #101827);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .star-river::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px);
+      background-size: 38px 38px;
+      opacity: 0.2;
+    }
+
+    .star-river h3 {
+      position: relative;
+      margin: 0 0 20px;
+      font-size: 24px;
+    }
+
+    .message-pill {
+      position: relative;
+      margin: 14px 0;
+      padding: 12px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(10px);
+      font-size: 14px;
+    }
+
+    .barrage-bar {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      width: min(880px, calc(100% - 28px));
+      z-index: 80;
+      display: grid;
+      grid-template-columns: 130px 1fr 108px;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 999px;
+      background: rgba(255, 250, 242, 0.86);
+      border: 1px solid rgba(180, 120, 60, 0.18);
+      box-shadow: 0 18px 44px rgba(90, 60, 30, 0.18);
+      backdrop-filter: blur(14px);
+    }
+
+    .barrage-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-weight: 800;
+      color: var(--gold-dark);
+    }
+
+    .barrage-bar input {
+      height: 42px;
+      border: 1px solid rgba(180, 120, 60, 0.16);
+      border-radius: 999px;
+      padding: 0 16px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--brown);
+      font: inherit;
+    }
+
+    .barrage-bar button {
+      height: 42px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffad57, #f26f42);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(20, 12, 7, 0.78);
+      z-index: 120;
+      padding: 40px;
+    }
+
+    .lightbox.show {
+      display: grid;
+    }
+
+    .lightbox img {
+      max-width: min(1100px, 92vw);
+      max-height: 78vh;
+      object-fit: contain;
+      border-radius: 22px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    .close {
+      position: absolute;
+      top: 28px;
+      right: 34px;
+      width: 46px;
+      height: 46px;
+      border: none;
+      border-radius: 50%;
+      font-size: 30px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.9);
+      color: #4c2b18;
+    }
+
+    .download-btn {
+      position: absolute;
+      bottom: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, #f0ad4f, #d3772f);
+      font-weight: 800;
+    }
+
+    footer {
+      padding: 40px 20px 120px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        padding: 0 18px;
+      }
+
+      .nav,
+      .search {
+        display: none;
+      }
+
+      .stats-panel {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .feature-row,
+      .gallery-grid,
+      .post-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .content-split {
+        grid-template-columns: 1fr;
+      }
+
+      .barrage-bar {
+        grid-template-columns: 1fr 78px;
+        border-radius: 24px;
+      }
+
+      .barrage-label {
+        display: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        min-height: 700px;
+      }
+
+      .hero-title {
+        font-size: 56px;
+      }
+
+      .hero-btn {
+        width: min(260px, 100%);
+      }
+
+      .stats-panel {
+        position: relative;
+        bottom: auto;
+        margin-top: 42px;
+      }
+
+      .feature-row,
+      .gallery-grid,
+      .post-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<audio id="bgm" src="music/bgm.mp3" loop preload="auto"></audio>
+
+<header class="topbar">
+  <a class="brand" href="#">
+    <span class="brand-icon">🎓</span>
+    <span>毕业纪念相册</span>
+  </a>
+
+  <nav class="nav">
+    <a href="#" class="active">首页</a>
+    <a href="#timeline">纪念时光轴</a>
+    <a href="#submissions">同学投稿</a>
+    <a href="#starRiver">留言星河</a>
+    <a href="#about">关于我们</a>
+  </nav>
+
+  <div class="top-right">
+    <div class="search">🔍 搜索同学、照片、地点...</div>
+    <div class="avatar">涵</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="bubble b1">毕业快乐！我们的未来都会发光✨</div>
+  <div class="bubble b2">愿我们顶峰相见，做更好的自己</div>
+  <div class="bubble b3">这一站，青春不散场🌸</div>
+  <div class="bubble b4">时光不老，我们不散❤️</div>
+  <div class="bubble b5">未来可期！</div>
+
+  <div class="hero-inner">
+    <h1 class="hero-title">毕业纪念相册</h1>
+    <p class="hero-subtitle">把青春收藏成光，等未来想起时再发亮 ✨</p>
+
+    <div class="hero-actions">
+      <a class="hero-btn primary" href="#gallery">📖 进入相册</a>
+      <button id="surpriseBtn" class="hero-btn glass surprise" type="button">✨ 点击有惊喜</button>
+      <a class="hero-btn light" href="upload.html">☁ 上传照片</a>
+    </div>
+  </div>
+
+  <div class="stats-panel">
+    <div class="stat">
+      <span>待审核投稿</span>
+      <strong id="pendingCount">--</strong>
+    </div>
+    <div class="stat">
+      <span>已收录回忆</span>
+      <strong>2,846</strong>
+    </div>
+    <div class="stat">
+      <span>同学参与</span>
+      <strong id="approvedCount">--</strong>
+    </div>
+    <div class="stat">
+      <span>累计访问</span>
+      <strong>18,732</strong>
+    </div>
+  </div>
+</section>
+
+<section class="feature-row">
+  <article class="feature-card">
+    <div class="feature-icon">⏳</div>
+    <h3>时间胶囊</h3>
+    <p>写给未来的一封信，把此刻的心愿藏进毕业时光里。</p>
+  </article>
+
+  <article class="feature-card">
+    <div class="feature-icon">🤖</div>
+    <h3>AI照片修复</h3>
+    <p>后续可接入照片增强，让模糊老照片重新清晰起来。</p>
+  </article>
+
+  <article class="feature-card">
+    <div class="feature-icon">🎙</div>
+    <h3>语音留言</h3>
+    <p>用声音留下祝福，比文字多一点温度。</p>
+  </article>
+
+  <article class="feature-card">
+    <div class="feature-icon">🎬</div>
+    <h3>视频祝福</h3>
+    <p>录下一段话，送给多年后的我们。</p>
+  </article>
+
+  <article class="feature-card">
+    <div class="feature-icon">🎲</div>
+    <h3>随机回忆</h3>
+    <p>随机打开一段照片回忆，遇见意想不到的青春瞬间。</p>
+  </article>
+</section>
+
+<section class="section" id="gallery">
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">精选纪念瞬间</h2>
+      <p class="section-desc">那些被镜头定格下来的美好时光</p>
+    </div>
+    <a class="more" href="#gallery">查看更多 ›</a>
+  </div>
+
+  <div class="gallery-grid">
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4817_thumb.webp" data-preview="photos_v2/large/DSC4817_large.webp" data-original="images/DSC4817.JPG" alt="毕业照1">
+      <figcaption class="caption">最后一节课的合照</figcaption>
+    </figure>
+
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4831_thumb.webp" data-preview="photos_v2/large/DSC4831_large.webp" data-original="images/DSC4831.JPG" alt="毕业照2">
+      <figcaption class="caption">运动会上的我们</figcaption>
+    </figure>
+
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4835_thumb.webp" data-preview="photos_v2/large/DSC4835_large.webp" data-original="images/DSC4835.JPG" alt="毕业照3">
+      <figcaption class="caption">毕业晚会的烟火</figcaption>
+    </figure>
+
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4841_thumb.webp" data-preview="photos_v2/large/DSC4841_large.webp" data-original="images/DSC4841.JPG" alt="毕业照4">
+      <figcaption class="caption">定格的日常碎片</figcaption>
+    </figure>
+
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4844_thumb.webp" data-preview="photos_v2/large/DSC4844_large.webp" data-original="images/DSC4844.JPG" alt="毕业照5">
+      <figcaption class="caption">樱花树下的约定</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section" id="timeline">
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">毕业时光轴</h2>
+      <p class="section-desc">从初入校园到毕业典礼，每一步都算数</p>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <strong>初入校园</strong>
+      <span>2019.09 · 我们在这里相遇</span>
+    </div>
+    <div class="timeline-item">
+      <strong>军训时光</strong>
+      <span>汗水与欢笑都值得记住</span>
+    </div>
+    <div class="timeline-item">
+      <strong>迎新晚会</strong>
+      <span>第一次站上舞台</span>
+    </div>
+    <div class="timeline-item">
+      <strong>图书馆夜晚</strong>
+      <span>为梦想拼搏的日子</span>
+    </div>
+    <div class="timeline-item">
+      <strong>毕业旅行</strong>
+      <span>一起去看海吧</span>
+    </div>
+    <div class="timeline-item">
+      <strong>毕业典礼</strong>
+      <span>未来可期，顶峰相见</span>
+    </div>
+  </div>
+</section>
+
+<section class="section content-split" id="submissions">
+  <div>
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">同学投稿</h2>
+        <p class="section-desc">来自同学们的独家记忆</p>
+      </div>
+      <a class="more" href="upload.html">我要投稿 ›</a>
+    </div>
+
+    <div class="post-grid" id="approvedGallery">
+      <article class="post-card">
+        <div class="post-user"><span class="face">涵</span> 刘涵 · 刚刚</div>
+        <img src="photos_v2/thumb/DSC4852_thumb.webp" alt="投稿照片">
+        <p>毕业不是结束，而是下一段旅程的开始 🌈</p>
+        <div class="post-foot"><span>♡ 86</span><span>💬 12</span></div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-user"><span class="face">林</span> 林小北 · 2小时前</div>
+        <img src="photos_v2/thumb/DSC4853_thumb.webp" alt="投稿照片">
+        <p>把青春装进相册，永远不散场 ✨</p>
+        <div class="post-foot"><span>♡ 72</span><span>💬 8</span></div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-user"><span class="face">苏</span> 苏打 · 5小时前</div>
+        <img src="photos_v2/thumb/DSC4854_thumb.webp" alt="投稿照片">
+        <p>愿此去繁花似锦，再相逢依旧如故。</p>
+        <div class="post-foot"><span>♡ 65</span><span>💬 6</span></div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-user"><span class="face">周</span> 周舟 · 6小时前</div>
+        <img src="photos_v2/thumb/DSC4857_thumb.webp" alt="投稿照片">
+        <p>时光不老，我们不散。</p>
+        <div class="post-foot"><span>♡ 61</span><span>💬 5</span></div>
+      </article>
+    </div>
+  </div>
+
+  <aside class="star-river" id="starRiver">
+    <h3>✨ 留言星河</h3>
+    <div class="message-pill">小橘子：未来的我们一定要幸福呀！</div>
+    <div class="message-pill">匿名同学：愿此去繁花似锦，再相逢依旧如故 ❤️</div>
+    <div class="message-pill">可可：毕业快乐！大家前程似锦！</div>
+    <div class="message-pill">阿飞：就算分开，我们也在彼此星河里。</div>
+  </aside>
+</section>
+
+<form class="barrage-bar" id="barrageForm">
+  <div class="barrage-label">✈ 今日弹幕墙</div>
+  <input id="barrageInput" type="text" maxlength="60" placeholder="输入你想说的话...毕业快乐！">
+  <button type="submit">发送</button>
+</form>
+
+<div class="lightbox" id="lightbox">
+  <button class="close" id="closeBtn">×</button>
+  <img id="lightboxImg" src="" alt="照片预览">
+  <a id="downloadBtn" class="download-btn" href="" download>下载原图</a>
+</div>
+
+<footer id="about">
+  <p>Graduation Album · 把青春留在镜头里，把这一刻留给未来</p>
+</footer>
+
+<script>
+  const bgm = document.getElementById("bgm");
+  const surpriseBtn = document.getElementById("surpriseBtn");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+  const closeBtn = document.getElementById("closeBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const barrageForm = document.getElementById("barrageForm");
+  const barrageInput = document.getElementById("barrageInput");
+  const pendingCountEl = document.getElementById("pendingCount");
+  const approvedCountEl = document.getElementById("approvedCount");
+  const approvedGallery = document.getElementById("approvedGallery");
+
+  let isPlaying = false;
+
+  async function playMusic() {
+    try {
+      await bgm.play();
+      isPlaying = true;
+      surpriseBtn.classList.add("playing");
+      surpriseBtn.textContent = "惊喜播放中 ♪";
+    } catch (err) {
+      alert("浏览器需要你点击按钮后才能播放音乐。");
+      console.error("音乐播放失败：", err);
+    }
+  }
+
+  function pauseMusic() {
+    bgm.pause();
+    isPlaying = false;
+    surpriseBtn.classList.remove("playing");
+    surpriseBtn.textContent = "✨ 点击有惊喜";
+  }
+
+  surpriseBtn.addEventListener("click", function () {
+    if (isPlaying) {
+      pauseMusic();
+    } else {
+      playMusic();
+    }
+  });
+
+  function openLightbox(previewUrl, originalUrl, filename) {
+    lightboxImg.src = previewUrl;
+    downloadBtn.href = originalUrl;
+    downloadBtn.setAttribute("download", filename || "photo.jpg");
+    lightbox.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove("show");
+    lightboxImg.src = "";
+    downloadBtn.href = "";
+    document.body.style.overflow = "";
+  }
+
+  document.querySelectorAll(".photo-card img").forEach(function (img) {
+    img.addEventListener("click", function () {
+      openLightbox(
+        img.dataset.preview,
+        img.dataset.original,
+        img.dataset.original ? img.dataset.original.split("/").pop() : "photo.jpg"
+      );
+    });
+  });
+
+  closeBtn.addEventListener("click", closeLightbox);
+
+  lightbox.addEventListener("click", function (e) {
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      closeLightbox();
+    }
+  });
+
+  function cloudinaryTransform(url, transform) {
+    if (!url || !url.includes("/upload/")) {
+      return url || "";
+    }
+
+    return url.replace("/upload/", `/upload/${transform}/`);
+  }
+
+  function getPhotoFilename(photo) {
+    if (photo.public_id && photo.format) {
+      return `${photo.public_id}.${photo.format}`;
+    }
+
+    return "photo.jpg";
+  }
+
+  async function loadApprovedPhotos() {
+    try {
+      const res = await fetch("/api/list-approved?t=" + Date.now(), {
+        cache: "no-store"
+      });
+
+      if (!res.ok) return;
+
+      const photos = await res.json();
+
+      if (!Array.isArray(photos) || photos.length === 0) return;
+
+      approvedGallery.innerHTML = "";
+
+      photos.forEach(function (photo) {
+        if (!photo.secure_url) return;
+
+        const thumb = cloudinaryTransform(photo.secure_url, "c_limit,w_520,q_auto:eco,f_auto");
+        const original = photo.secure_url;
+        const download = cloudinaryTransform(photo.secure_url, "fl_attachment");
+
+        const card = document.createElement("article");
+        card.className = "post-card";
+
+        card.innerHTML = `
+          <div class="post-user"><span class="face">${(photo.name || "匿").slice(0, 1)}</span> ${photo.name || "匿名"} · 投稿</div>
+          <img src="${thumb}" alt="投稿照片">
+          <p>${photo.message || "把青春装进相册，永远不散场。"}</p>
+          <div class="post-foot"><span>♡ ${Math.floor(Math.random() * 60) + 12}</span><span>💬 ${Math.floor(Math.random() * 12) + 1}</span></div>
+        `;
+
+        card.querySelector("img").addEventListener("click", function () {
+          openLightbox(original, download, getPhotoFilename(photo));
+        });
+
+        approvedGallery.appendChild(card);
+      });
+    } catch (err) {
+      console.log("动态投稿暂未加载：", err);
+    }
+  }
+
+  async function loadAlbumStats() {
+    try {
+      const res = await fetch("/api/album-stats?t=" + Date.now(), {
+        cache: "no-store"
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+
+      if (typeof data.pendingCount === "number") {
+        pendingCountEl.textContent = data.pendingCount;
+      }
+
+      if (typeof data.approvedCount === "number") {
+        approvedCountEl.textContent = data.approvedCount;
+      }
+    } catch (err) {
+      console.log("统计接口暂未接入：", err);
+    }
+  }
+
+  barrageForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const message = barrageInput.value.trim();
+
+    if (!message) {
+      alert("先写一句留言吧。");
+      return;
+    }
+
+    const pill = document.createElement("div");
+    pill.className = "message-pill";
+    pill.textContent = "你：" + message;
+    document.getElementById("starRiver").appendChild(pill);
+
+    barrageInput.value = "";
+
+    try {
+      await fetch("/api/submit-barrage?t=" + Date.now(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: "匿名",
+          message
+        })
+      });
+    } catch (err) {
+      console.log("弹幕接口暂未接入：", err);
+    }
+  });
+
+  loadApprovedPhotos();
+  loadAlbumStats();
+</script>
+
+</body>
+</html>
