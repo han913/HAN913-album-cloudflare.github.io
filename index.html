@@ -17,6 +17,8 @@
       --muted: #8b735c;
       --line: rgba(170, 115, 55, 0.18);
       --shadow: 0 18px 45px rgba(95, 62, 26, 0.16);
+      /* 自定义封面图：这里是默认封面，不再使用第一张图 */
+      --hero-cover: url("photos_v2/large/DSC5052_large.webp");
     }
 
     * {
@@ -69,6 +71,89 @@
 
 .gallery-grid.show-all .extra-photo {
   display: block;
+}
+
+.post-grid .upload-tip {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 24px;
+  border-radius: 20px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(180, 120, 60, 0.12);
+}
+
+.danmaku-layer {
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.danmaku-layer.fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+}
+
+.danmaku-layer.partial {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 70px;
+  bottom: 14px;
+  z-index: 2;
+}
+
+.danmaku-layer.hidden {
+  display: none;
+}
+
+.danmaku-item {
+  position: absolute;
+  left: 100%;
+  white-space: nowrap;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+  animation-name: danmakuMove;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.danmaku-layer.fullscreen .danmaku-item {
+  background: rgba(255, 248, 236, 0.68);
+  color: #3a2416;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+}
+
+@keyframes danmakuMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-150vw);
+  }
+}
+
+.danmaku-mode-btn {
+  height: 42px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76) !important;
+  color: #8b551f !important;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.barrage-bar {
+  grid-template-columns: 130px 1fr 116px 108px;
 }
 
     .brand {
@@ -156,7 +241,7 @@
       overflow: hidden;
       background:
         linear-gradient(180deg, rgba(48, 28, 12, 0.1), rgba(255, 244, 226, 0.1)),
-        url("photos_v2/large/DSC4817_large.webp") center/cover no-repeat;
+        var(--hero-cover) center/cover no-repeat;
     }
 
     .hero::before {
@@ -746,11 +831,159 @@
         grid-template-columns: 1fr;
       }
     }
+
+
+    /* 当前版本追加：封面去假弹幕、投稿并入相册、照片详情互动 */
+    .star-river-tip {
+      position: relative;
+      z-index: 3;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 14px;
+    }
+
+    .caption strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .caption span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: 0.9;
+    }
+
+    .lightbox { align-items: center; }
+
+    .lightbox-panel {
+      width: min(1180px, 94vw);
+      max-height: 86vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) 380px;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .lightbox-preview-wrap {
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      background: rgba(0, 0, 0, 0.22);
+      overflow: hidden;
+    }
+
+    .lightbox img.lightbox-preview {
+      max-width: 100%;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 22px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    .lightbox-info {
+      max-height: 86vh;
+      overflow: auto;
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(255, 248, 238, 0.94);
+      color: var(--brown);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+    }
+
+    .modal-tag {
+      display: inline-block;
+      margin: 0 0 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(216, 148, 53, 0.13);
+      color: var(--gold-dark);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .lightbox-info h3 { margin: 0 0 10px; font-size: 24px; color: #5b3218; }
+    .photo-message { margin: 0 0 16px; line-height: 1.7; color: #765537; }
+    .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+
+    .like-btn {
+      height: 42px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, #ff9b6a, #ef5c3e);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .modal-actions .download-btn {
+      position: static;
+      transform: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      box-shadow: none;
+    }
+
+    .modal-block { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(170, 115, 55, 0.16); }
+    .modal-block h4 { margin: 0 0 10px; font-size: 16px; }
+    .modal-hint, .empty-note { margin: 6px 0; font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+    .photo-comment-form {
+      display: grid;
+      grid-template-columns: 1fr 72px;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .photo-comment-form input {
+      height: 38px;
+      border: 1px solid rgba(180, 120, 60, 0.18);
+      border-radius: 999px;
+      padding: 0 12px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .photo-comment-form button, .voice-actions button {
+      border: none;
+      border-radius: 999px;
+      background: #ffd891;
+      color: #4b2d13;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .comment-item, .voice-item {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.58);
+      font-size: 13px;
+      color: #5f432b;
+    }
+
+    .voice-actions { display: flex; gap: 10px; align-items: center; margin: 10px 0; }
+    .voice-actions button { height: 38px; padding: 0 16px; }
+    .voice-actions span { font-size: 12px; color: var(--muted); }
+    .voice-item audio { width: 100%; margin-bottom: 4px; }
+
+    @media (max-width: 980px) {
+      .lightbox-panel { grid-template-columns: 1fr; overflow: auto; }
+      .lightbox-info { max-height: none; }
+    }
+
   </style>
 </head>
 <body>
 
 <audio id="bgm" src="music/bgm.mp3" loop preload="auto"></audio>
+<div id="fullscreenDanmakuLayer" class="danmaku-layer fullscreen hidden"></div>
 
 <header class="topbar">
   <a class="brand" href="#">
@@ -761,7 +994,7 @@
   <nav class="nav">
     <a href="#" class="active">首页</a>
     <a href="#timeline">纪念时光轴</a>
-    <a href="#submissions">同学投稿</a>
+    <a href="upload.html">上传照片</a>
     <a href="#starRiver">留言星河</a>
     <a href="#about">关于我们</a>
   </nav>
@@ -773,11 +1006,6 @@
 </header>
 
 <section class="hero">
-  <div class="bubble b1">毕业快乐！我们的未来都会发光✨</div>
-  <div class="bubble b2">愿我们顶峰相见，做更好的自己</div>
-  <div class="bubble b3">这一站，青春不散场🌸</div>
-  <div class="bubble b4">时光不老，我们不散❤️</div>
-  <div class="bubble b5">未来可期！</div>
 
   <div class="hero-inner">
     <h1 class="hero-title">毕业纪念相册</h1>
@@ -938,66 +1166,67 @@
   </div>
 </section>
 
-<section class="section content-split" id="submissions">
-  <div>
-    <div class="section-head">
-      <div>
-        <h2 class="section-title">同学投稿</h2>
-        <p class="section-desc">来自同学们的独家记忆</p>
-      </div>
-      <a class="more" href="upload.html">我要投稿 ›</a>
+<section class="section" id="starRiverSection">
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">留言星河</h2>
+      <p class="section-desc">留言会从右向左滚动，也可以切换为全屏弹幕。</p>
     </div>
-
-    <div class="post-grid" id="approvedGallery">
-      <article class="post-card">
-        <div class="post-user"><span class="face">涵</span> 刘涵 · 刚刚</div>
-        <img src="photos_v2/thumb/DSC4852_thumb.webp" alt="投稿照片">
-        <p>毕业不是结束，而是下一段旅程的开始 🌈</p>
-        <div class="post-foot"><span>♡ 86</span><span>💬 12</span></div>
-      </article>
-
-      <article class="post-card">
-        <div class="post-user"><span class="face">林</span> 林小北 · 2小时前</div>
-        <img src="photos_v2/thumb/DSC4853_thumb.webp" alt="投稿照片">
-        <p>把青春装进相册，永远不散场 ✨</p>
-        <div class="post-foot"><span>♡ 72</span><span>💬 8</span></div>
-      </article>
-
-      <article class="post-card">
-        <div class="post-user"><span class="face">苏</span> 苏打 · 5小时前</div>
-        <img src="photos_v2/thumb/DSC4854_thumb.webp" alt="投稿照片">
-        <p>愿此去繁花似锦，再相逢依旧如故。</p>
-        <div class="post-foot"><span>♡ 65</span><span>💬 6</span></div>
-      </article>
-
-      <article class="post-card">
-        <div class="post-user"><span class="face">周</span> 周舟 · 6小时前</div>
-        <img src="photos_v2/thumb/DSC4857_thumb.webp" alt="投稿照片">
-        <p>时光不老，我们不散。</p>
-        <div class="post-foot"><span>♡ 61</span><span>💬 5</span></div>
-      </article>
-    </div>
+    <a class="more" href="upload.html">我要投稿 ›</a>
   </div>
 
   <aside class="star-river" id="starRiver">
     <h3>✨ 留言星河</h3>
-    <div class="message-pill">小橘子：未来的我们一定要幸福呀！</div>
-    <div class="message-pill">匿名同学：愿此去繁花似锦，再相逢依旧如故 ❤️</div>
-    <div class="message-pill">可可：毕业快乐！大家前程似锦！</div>
-    <div class="message-pill">阿飞：就算分开，我们也在彼此星河里。</div>
+    <p class="star-river-tip">这里展示审核通过的投稿留言和同学发送的弹幕。</p>
+    <div id="partialDanmakuLayer" class="danmaku-layer partial"></div>
   </aside>
 </section>
 
 <form class="barrage-bar" id="barrageForm">
   <div class="barrage-label">✈ 今日弹幕墙</div>
   <input id="barrageInput" type="text" maxlength="60" placeholder="输入你想说的话...毕业快乐！">
+  <button id="danmakuModeBtn" class="danmaku-mode-btn" type="button">部分显示</button>
   <button type="submit">发送</button>
 </form>
 
 <div class="lightbox" id="lightbox">
   <button class="close" id="closeBtn">×</button>
-  <img id="lightboxImg" src="" alt="照片预览">
-  <a id="downloadBtn" class="download-btn" href="" download>下载原图</a>
+
+  <div class="lightbox-panel">
+    <div class="lightbox-preview-wrap">
+      <img id="lightboxImg" class="lightbox-preview" src="" alt="照片预览">
+    </div>
+
+    <aside class="lightbox-info">
+      <p class="modal-tag" id="photoSourceText">官方相册</p>
+      <h3 id="photoTitle">照片标题</h3>
+      <p id="photoMessage" class="photo-message">点击照片后会在这里显示上传者和留言。</p>
+
+      <div class="modal-actions">
+        <button id="likeBtn" class="like-btn" type="button">♡ 点赞 <span id="likeCount">0</span></button>
+        <a id="downloadBtn" class="download-btn" href="" download>下载原图</a>
+      </div>
+
+      <div class="modal-block">
+        <h4>信息留言</h4>
+        <form id="photoCommentForm" class="photo-comment-form">
+          <input id="photoCommentInput" maxlength="80" placeholder="给这张照片留一句话">
+          <button type="submit">留言</button>
+        </form>
+        <div id="photoCommentList" class="comment-list"></div>
+      </div>
+
+      <div class="modal-block">
+        <h4>语音留言</h4>
+        <p class="modal-hint">语音留言会先保存在当前浏览器，本地测试够用；后续接 Cloudflare 后端后可改成云端保存。</p>
+        <div class="voice-actions">
+          <button id="voiceRecordBtn" type="button">开始录音</button>
+          <span id="voiceStatus">未录音</span>
+        </div>
+        <div id="voiceList" class="voice-list"></div>
+      </div>
+    </aside>
+  </div>
 </div>
 
 <footer id="about">
@@ -1005,21 +1234,79 @@
 </footer>
 
 <script>
+  const SITE_CONFIG = {
+    /*
+      自定义封面方法：
+      1. 默认改这里，例如：
+         heroCoverImage: "photos_v2/large/DSC5050_large.webp"
+      2. 临时测试可以在网址后面加：
+         ?cover=photos_v2/large/DSC4899_large.webp
+      3. 网址参数测试成功后，会自动记到本机 localStorage。
+    */
+    heroCoverImage: "photos_v2/large/DSC5052_large.webp"
+  };
+
   const bgm = document.getElementById("bgm");
   const surpriseBtn = document.getElementById("surpriseBtn");
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
   const closeBtn = document.getElementById("closeBtn");
   const downloadBtn = document.getElementById("downloadBtn");
+  const photoSourceText = document.getElementById("photoSourceText");
+  const photoTitle = document.getElementById("photoTitle");
+  const photoMessage = document.getElementById("photoMessage");
+  const likeBtn = document.getElementById("likeBtn");
+  const likeCount = document.getElementById("likeCount");
+  const photoCommentForm = document.getElementById("photoCommentForm");
+  const photoCommentInput = document.getElementById("photoCommentInput");
+  const photoCommentList = document.getElementById("photoCommentList");
+  const voiceRecordBtn = document.getElementById("voiceRecordBtn");
+  const voiceStatus = document.getElementById("voiceStatus");
+  const voiceList = document.getElementById("voiceList");
   const barrageForm = document.getElementById("barrageForm");
   const barrageInput = document.getElementById("barrageInput");
+  const danmakuModeBtn = document.getElementById("danmakuModeBtn");
+  const fullscreenDanmakuLayer = document.getElementById("fullscreenDanmakuLayer");
+  const partialDanmakuLayer = document.getElementById("partialDanmakuLayer");
   const pendingCountEl = document.getElementById("pendingCount");
- const approvedCountEl = document.getElementById("approvedCount");
-const memoryCountEl = document.getElementById("memoryCount");
-const visitCountEl = document.getElementById("visitCount");
-const approvedGallery = document.getElementById("approvedGallery");
+  const approvedCountEl = document.getElementById("approvedCount");
+  const memoryCountEl = document.getElementById("memoryCount");
+  const visitCountEl = document.getElementById("visitCount");
+  const viewAllBtn = document.getElementById("viewAllBtn");
+  const mainGallery = document.getElementById("mainGallery");
 
   let isPlaying = false;
+  let danmakuMode = "partial";
+  let danmakuTimer = null;
+  let danmakuIndex = 0;
+  let danmakuMessages = [];
+  let currentPhoto = null;
+  let mediaRecorder = null;
+  let voiceChunks = [];
+  let recordingTimer = null;
+
+  function applyCustomCover() {
+    const params = new URLSearchParams(window.location.search);
+    const coverFromUrl = params.get("cover");
+    const savedCover = localStorage.getItem("albumHeroCover");
+    const cover = coverFromUrl || savedCover || SITE_CONFIG.heroCoverImage;
+    if (coverFromUrl) localStorage.setItem("albumHeroCover", coverFromUrl);
+    document.documentElement.style.setProperty("--hero-cover", `url("${cover}")`);
+  }
+
+  function formatNumber(value) {
+    if (typeof value !== "number" || Number.isNaN(value)) return "--";
+    return value.toLocaleString("zh-CN");
+  }
+
+  function getStaticPhotoCount() {
+    return document.querySelectorAll("#mainGallery .photo-card:not(.approved-photo)").length;
+  }
+
+  function safeText(value, fallback) {
+    const text = String(value || "").trim();
+    return text || fallback;
+  }
 
   async function playMusic() {
     try {
@@ -1040,18 +1327,81 @@ const approvedGallery = document.getElementById("approvedGallery");
     surpriseBtn.textContent = "✨ 点击有惊喜";
   }
 
-  surpriseBtn.addEventListener("click", function () {
-    if (isPlaying) {
-      pauseMusic();
-    } else {
-      playMusic();
-    }
-  });
+  if (surpriseBtn && bgm) {
+    surpriseBtn.addEventListener("click", function () {
+      if (isPlaying) pauseMusic(); else playMusic();
+    });
+  }
 
-  function openLightbox(previewUrl, originalUrl, filename) {
-    lightboxImg.src = previewUrl;
-    downloadBtn.href = originalUrl;
-    downloadBtn.setAttribute("download", filename || "photo.jpg");
+  function storageKey(type, photoId) { return `graduationAlbum:${type}:${photoId}`; }
+  function readJson(key, fallback) { try { return JSON.parse(localStorage.getItem(key) || "") || fallback; } catch (err) { return fallback; } }
+  function writeJson(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+  function getLikeValue(photoId) { const value = Number(localStorage.getItem(storageKey("likes", photoId)) || 0); return Number.isFinite(value) ? value : 0; }
+  function setLikeValue(photoId, value) { localStorage.setItem(storageKey("likes", photoId), String(value)); }
+  function getComments(photoId) { return readJson(storageKey("comments", photoId), []); }
+  function setComments(photoId, comments) { writeJson(storageKey("comments", photoId), comments.slice(0, 30)); }
+  function getVoices(photoId) { return readJson(storageKey("voices", photoId), []); }
+  function setVoices(photoId, voices) { writeJson(storageKey("voices", photoId), voices.slice(0, 5)); }
+
+  function inferStaticIndex(img, index) {
+    const match = (img.alt || "").match(/\d+/);
+    return match ? match[0] : String(index + 1);
+  }
+
+  function prepareStaticGallery() {
+    const staticImgs = document.querySelectorAll("#mainGallery .photo-card:not(.approved-photo) img");
+    staticImgs.forEach(function (img, index) {
+      const figure = img.closest(".photo-card");
+      const photoIndex = inferStaticIndex(img, index);
+      const title = `毕业照${photoIndex}`;
+      const uploader = "官方相册";
+      const message = "把青春留在镜头里，把这一刻留给未来。";
+      figure.dataset.photoId = `static-${photoIndex}`;
+      figure.dataset.source = "官方相册";
+      figure.dataset.uploader = uploader;
+      figure.dataset.message = message;
+      figure.dataset.title = title;
+      const caption = figure.querySelector(".caption");
+      if (caption) caption.innerHTML = `<strong>${uploader}</strong><span>${title}</span>`;
+    });
+  }
+
+  function getPhotoFromFigure(figure) {
+    const img = figure.querySelector("img");
+    const original = img.dataset.original || img.src;
+    const preview = img.dataset.preview || img.src;
+    return {
+      id: figure.dataset.photoId || original || img.src,
+      title: figure.dataset.title || img.alt || "毕业照片",
+      uploader: figure.dataset.uploader || "官方相册",
+      message: figure.dataset.message || "",
+      source: figure.dataset.source || "官方相册",
+      preview,
+      original,
+      download: figure.dataset.download || original
+    };
+  }
+
+  function bindGalleryCard(figure) {
+    const img = figure.querySelector("img");
+    if (!img || figure.dataset.bound === "1") return;
+    figure.dataset.bound = "1";
+    img.addEventListener("click", function () { openPhotoModal(getPhotoFromFigure(figure)); });
+  }
+
+  function bindAllGalleryCards() { document.querySelectorAll("#mainGallery .photo-card").forEach(bindGalleryCard); }
+
+  function openPhotoModal(photo) {
+    currentPhoto = photo;
+    lightboxImg.src = photo.preview;
+    downloadBtn.href = photo.download;
+    downloadBtn.setAttribute("download", photo.download.split("/").pop() || "photo.jpg");
+    photoSourceText.textContent = `${photo.source} · ${photo.uploader}`;
+    photoTitle.textContent = photo.title;
+    photoMessage.textContent = photo.message || "这张照片还没有留言。";
+    renderPhotoStats();
+    renderPhotoComments();
+    renderVoiceList();
     lightbox.classList.add("show");
     document.body.style.overflow = "hidden";
   }
@@ -1060,189 +1410,266 @@ const approvedGallery = document.getElementById("approvedGallery");
     lightbox.classList.remove("show");
     lightboxImg.src = "";
     downloadBtn.href = "";
+    currentPhoto = null;
     document.body.style.overflow = "";
   }
 
-  document.querySelectorAll(".photo-card img").forEach(function (img) {
-    img.addEventListener("click", function () {
-      openLightbox(
-        img.dataset.preview,
-        img.dataset.original,
-        img.dataset.original ? img.dataset.original.split("/").pop() : "photo.jpg"
-      );
+  function renderPhotoStats() { if (currentPhoto) likeCount.textContent = formatNumber(getLikeValue(currentPhoto.id)); }
+
+  function renderPhotoComments() {
+    if (!currentPhoto) return;
+    const comments = getComments(currentPhoto.id);
+    photoCommentList.innerHTML = "";
+    if (!comments.length) { photoCommentList.innerHTML = '<p class="empty-note">还没有信息留言。</p>'; return; }
+    comments.forEach(function (item) {
+      const div = document.createElement("div");
+      div.className = "comment-item";
+      div.textContent = `${item.time} · ${item.text}`;
+      photoCommentList.appendChild(div);
     });
+  }
+
+  function renderVoiceList() {
+    if (!currentPhoto) return;
+    const voices = getVoices(currentPhoto.id);
+    voiceList.innerHTML = "";
+    if (!voices.length) { voiceList.innerHTML = '<p class="empty-note">还没有语音留言。</p>'; return; }
+    voices.forEach(function (item) {
+      const wrap = document.createElement("div");
+      wrap.className = "voice-item";
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.src = item.dataUrl;
+      const text = document.createElement("span");
+      text.textContent = item.time;
+      wrap.appendChild(audio);
+      wrap.appendChild(text);
+      voiceList.appendChild(wrap);
+    });
+  }
+
+  likeBtn.addEventListener("click", function () {
+    if (!currentPhoto) return;
+    const next = getLikeValue(currentPhoto.id) + 1;
+    setLikeValue(currentPhoto.id, next);
+    renderPhotoStats();
+  });
+
+  photoCommentForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!currentPhoto) return;
+    const text = photoCommentInput.value.trim();
+    if (!text) return;
+    const comments = getComments(currentPhoto.id);
+    comments.unshift({ text, time: new Date().toLocaleString() });
+    setComments(currentPhoto.id, comments);
+    photoCommentInput.value = "";
+    renderPhotoComments();
+  });
+
+  function blobToDataUrl(blob) {
+    return new Promise(function (resolve, reject) {
+      const reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function startVoiceRecord() {
+    if (!currentPhoto) { alert("请先打开一张照片。"); return; }
+    if (!navigator.mediaDevices || !window.MediaRecorder) { alert("当前浏览器不支持录音功能。可以先使用文字留言。"); return; }
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    voiceChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = function (e) { if (e.data && e.data.size > 0) voiceChunks.push(e.data); };
+    mediaRecorder.onstop = async function () {
+      stream.getTracks().forEach(function (track) { track.stop(); });
+      clearTimeout(recordingTimer);
+      const blob = new Blob(voiceChunks, { type: "audio/webm" });
+      const dataUrl = await blobToDataUrl(blob);
+      const voices = getVoices(currentPhoto.id);
+      voices.unshift({ dataUrl, time: new Date().toLocaleString() });
+      try { setVoices(currentPhoto.id, voices); }
+      catch (err) { alert("这段录音太大，浏览器本地存不下。可以录短一点，或后续接云端存储。"); }
+      mediaRecorder = null;
+      voiceRecordBtn.textContent = "开始录音";
+      voiceStatus.textContent = "录音已保存";
+      renderVoiceList();
+    };
+    mediaRecorder.start();
+    voiceRecordBtn.textContent = "停止录音";
+    voiceStatus.textContent = "正在录音，最长 20 秒";
+    recordingTimer = setTimeout(function () { if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop(); }, 20000);
+  }
+
+  voiceRecordBtn.addEventListener("click", async function () {
+    try {
+      if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+      else await startVoiceRecord();
+    } catch (err) {
+      console.error("录音失败：", err);
+      voiceStatus.textContent = "录音失败";
+    }
   });
 
   closeBtn.addEventListener("click", closeLightbox);
-
-  lightbox.addEventListener("click", function (e) {
-    if (e.target === lightbox) {
-      closeLightbox();
-    }
-  });
-
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") {
-      closeLightbox();
-    }
-  });
+  lightbox.addEventListener("click", function (e) { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLightbox(); });
 
   function cloudinaryTransform(url, transform) {
-    if (!url || !url.includes("/upload/")) {
-      return url || "";
-    }
-
+    if (!url || !url.includes("/upload/")) return url || "";
     return url.replace("/upload/", `/upload/${transform}/`);
   }
 
-  function getPhotoFilename(photo) {
-    if (photo.public_id && photo.format) {
-      return `${photo.public_id}.${photo.format}`;
-    }
-
-    return "photo.jpg";
+  function appendApprovedPhoto(photo) {
+    if (!photo.secure_url) return;
+    const thumb = cloudinaryTransform(photo.secure_url, "c_limit,w_520,q_auto:eco,f_auto");
+    const preview = cloudinaryTransform(photo.secure_url, "c_limit,w_1800,q_auto:good,f_auto");
+    const download = cloudinaryTransform(photo.secure_url, "fl_attachment");
+    const name = safeText(photo.name, "匿名");
+    const message = safeText(photo.message, "这位同学暂时没有留下文字。");
+    const title = `${name}的投稿`;
+    const figure = document.createElement("figure");
+    figure.className = "photo-card extra-photo approved-photo";
+    figure.dataset.photoId = `approved-${photo.id || photo.public_id || Date.now()}`;
+    figure.dataset.source = "同学投稿";
+    figure.dataset.uploader = name;
+    figure.dataset.message = message;
+    figure.dataset.title = title;
+    figure.dataset.download = download;
+    const img = document.createElement("img");
+    img.src = thumb;
+    img.dataset.preview = preview;
+    img.dataset.original = download;
+    img.alt = title;
+    const caption = document.createElement("figcaption");
+    caption.className = "caption";
+    caption.innerHTML = `<strong>${name}</strong><span>${message}</span>`;
+    figure.appendChild(img);
+    figure.appendChild(caption);
+    mainGallery.appendChild(figure);
+    bindGalleryCard(figure);
   }
 
   async function loadApprovedPhotos() {
     try {
-      const res = await fetch("/api/list-approved?t=" + Date.now(), {
-        cache: "no-store"
-      });
-
-      if (!res.ok) return;
-
+      const res = await fetch("/api/list-approved?t=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) return null;
       const photos = await res.json();
-
-      if (!Array.isArray(photos) || photos.length === 0) return;
-
-      approvedGallery.innerHTML = "";
-
-      photos.forEach(function (photo) {
-        if (!photo.secure_url) return;
-
-        const thumb = cloudinaryTransform(photo.secure_url, "c_limit,w_520,q_auto:eco,f_auto");
-        const original = photo.secure_url;
-        const download = cloudinaryTransform(photo.secure_url, "fl_attachment");
-
-        const card = document.createElement("article");
-        card.className = "post-card";
-
-        card.innerHTML = `
-          <div class="post-user"><span class="face">${(photo.name || "匿").slice(0, 1)}</span> ${photo.name || "匿名"} · 投稿</div>
-          <img src="${thumb}" alt="投稿照片">
-          <p>${photo.message || "把青春装进相册，永远不散场。"}</p>
-          <div class="post-foot"><span>♡ ${Math.floor(Math.random() * 60) + 12}</span><span>💬 ${Math.floor(Math.random() * 12) + 1}</span></div>
-        `;
-
-        card.querySelector("img").addEventListener("click", function () {
-          openLightbox(original, download, getPhotoFilename(photo));
-        });
-
-        approvedGallery.appendChild(card);
-      });
+      if (!Array.isArray(photos) || photos.length === 0) return 0;
+      photos.forEach(appendApprovedPhoto);
+      return photos.length;
     } catch (err) {
       console.log("动态投稿暂未加载：", err);
+      return null;
     }
   }
 
-async function loadAlbumStats() {
-  const staticPhotoCount = document.querySelectorAll("#gallery .photo-card").length;
-
-  memoryCountEl.textContent = staticPhotoCount;
-  visitCountEl.textContent = "--";
-
-  try {
-    const res = await fetch("/api/album-stats?t=" + Date.now(), {
-      cache: "no-store"
-    });
-
-    if (!res.ok) {
-      return;
-    }
-
-    const data = await res.json();
-
-    const pendingCount = typeof data.pendingCount === "number"
-      ? data.pendingCount
-      : 0;
-
-    const approvedCount = typeof data.approvedCount === "number"
-      ? data.approvedCount
-      : 0;
-
-    pendingCountEl.textContent = pendingCount;
-    approvedCountEl.textContent = approvedCount;
-
-    memoryCountEl.textContent = staticPhotoCount + approvedCount;
-
-    if (typeof data.visitCount === "number") {
-      visitCountEl.textContent = data.visitCount;
-    } else {
-      visitCountEl.textContent = "--";
-    }
-  } catch (err) {
-    console.log("统计接口暂未接入：", err);
-
+  async function loadAlbumStats(approvedCountFromGallery) {
+    const staticPhotoCount = getStaticPhotoCount();
+    const fallbackApprovedCount = typeof approvedCountFromGallery === "number" ? approvedCountFromGallery : null;
+    memoryCountEl.textContent = formatNumber(staticPhotoCount + (fallbackApprovedCount || 0));
     pendingCountEl.textContent = "--";
-    approvedCountEl.textContent = "--";
-    memoryCountEl.textContent = staticPhotoCount;
+    approvedCountEl.textContent = fallbackApprovedCount === null ? "--" : formatNumber(fallbackApprovedCount);
     visitCountEl.textContent = "--";
+    try {
+      const res = await fetch("/api/album-stats?t=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) return;
+      const data = await res.json();
+      const pendingCount = typeof data.pendingCount === "number" ? data.pendingCount : null;
+      const approvedCount = typeof data.approvedCount === "number" ? data.approvedCount : fallbackApprovedCount;
+      const visitCount = typeof data.visitCount === "number" ? data.visitCount : null;
+      pendingCountEl.textContent = pendingCount === null ? "--" : formatNumber(pendingCount);
+      approvedCountEl.textContent = approvedCount === null ? "--" : formatNumber(approvedCount);
+      memoryCountEl.textContent = formatNumber(staticPhotoCount + (approvedCount || 0));
+      visitCountEl.textContent = visitCount === null ? "--" : formatNumber(visitCount);
+      if (Array.isArray(data.messages)) {
+        danmakuMessages = data.messages.filter(function (item) { return item && item.message && String(item.message).trim(); });
+        startDanmaku();
+      }
+    } catch (err) { console.log("统计接口暂未接入：", err); }
   }
-}
+
+  function getCurrentDanmakuLayer() { return danmakuMode === "fullscreen" ? fullscreenDanmakuLayer : partialDanmakuLayer; }
+  function makeDanmakuText(item) { return `${item.name || "匿名"}：${item.message || ""}`; }
+  function createDanmaku(item) {
+    if (!item || !item.message || !String(item.message).trim()) return;
+    const layer = getCurrentDanmakuLayer();
+    if (!layer) return;
+    const el = document.createElement("div");
+    el.className = "danmaku-item";
+    el.textContent = makeDanmakuText(item);
+    const layerHeight = layer === fullscreenDanmakuLayer ? window.innerHeight : layer.clientHeight;
+    const minTop = layer === fullscreenDanmakuLayer ? 80 : 8;
+    const maxTop = Math.max(minTop + 20, layerHeight - 50);
+    el.style.top = (minTop + Math.random() * (maxTop - minTop)) + "px";
+    el.style.animationDuration = (12 + Math.random() * 8) + "s";
+    layer.appendChild(el);
+    setTimeout(function () { if (el && el.parentNode) el.parentNode.removeChild(el); }, 23000);
+  }
+  function clearDanmakuLayers() { if (fullscreenDanmakuLayer) fullscreenDanmakuLayer.innerHTML = ""; if (partialDanmakuLayer) partialDanmakuLayer.innerHTML = ""; }
+  function startDanmaku() {
+    if (danmakuTimer) { clearInterval(danmakuTimer); danmakuTimer = null; }
+    clearDanmakuLayers();
+    if (!danmakuMessages.length) return;
+    danmakuMessages.slice(0, 6).forEach(function (item, index) { setTimeout(function () { createDanmaku(item); }, index * 650); });
+    danmakuTimer = setInterval(function () {
+      if (!danmakuMessages.length) return;
+      const item = danmakuMessages[danmakuIndex % danmakuMessages.length];
+      danmakuIndex += 1;
+      createDanmaku(item);
+    }, 1700);
+  }
+  function updateDanmakuMode() {
+    if (danmakuMode === "fullscreen") {
+      fullscreenDanmakuLayer.classList.remove("hidden");
+      partialDanmakuLayer.classList.add("hidden");
+      danmakuModeBtn.textContent = "全屏显示";
+    } else {
+      fullscreenDanmakuLayer.classList.add("hidden");
+      partialDanmakuLayer.classList.remove("hidden");
+      danmakuModeBtn.textContent = "部分显示";
+    }
+    startDanmaku();
+  }
+  if (danmakuModeBtn) danmakuModeBtn.addEventListener("click", function () { danmakuMode = danmakuMode === "partial" ? "fullscreen" : "partial"; updateDanmakuMode(); });
 
   barrageForm.addEventListener("submit", async function (e) {
     e.preventDefault();
-
     const message = barrageInput.value.trim();
-
-    if (!message) {
-      alert("先写一句留言吧。");
-      return;
-    }
-
-    const pill = document.createElement("div");
-    pill.className = "message-pill";
-    pill.textContent = "你：" + message;
-    document.getElementById("starRiver").appendChild(pill);
-
+    if (!message) { alert("先写一句留言吧。"); return; }
+    const item = { name: "你", message };
+    danmakuMessages.unshift(item);
+    createDanmaku(item);
     barrageInput.value = "";
-
     try {
       await fetch("/api/submit-barrage?t=" + Date.now(), {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: "匿名",
-          message
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "匿名", message })
       });
-    } catch (err) {
-      console.log("弹幕接口暂未接入：", err);
-    }
+    } catch (err) { console.log("弹幕接口暂未接入：", err); }
   });
 
-  loadApprovedPhotos();
-  loadAlbumStats();
-  const viewAllBtn = document.getElementById("viewAllBtn");
-const mainGallery = document.getElementById("mainGallery");
+  if (viewAllBtn && mainGallery) {
+    viewAllBtn.addEventListener("click", function () {
+      mainGallery.classList.toggle("show-all");
+      if (mainGallery.classList.contains("show-all")) viewAllBtn.textContent = "收起照片 ↑";
+      else { viewAllBtn.textContent = "查看更多 ›"; mainGallery.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    });
+  }
 
-if (viewAllBtn && mainGallery) {
-  viewAllBtn.addEventListener("click", function () {
-    mainGallery.classList.toggle("show-all");
+  async function initPage() {
+    applyCustomCover();
+    prepareStaticGallery();
+    bindAllGalleryCards();
+    updateDanmakuMode();
+    const approvedCount = await loadApprovedPhotos();
+    await loadAlbumStats(approvedCount);
+  }
 
-    if (mainGallery.classList.contains("show-all")) {
-      viewAllBtn.textContent = "收起照片 ↑";
-    } else {
-      viewAllBtn.textContent = "查看更多 ›";
-      mainGallery.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    }
-  });
-}
+  initPage();
 </script>
 
 </body>
