@@ -2,7 +2,7 @@
   "name": "han913-album-cloudflare",
   "compatibility_date": "2026-06-04",
   "assets": {
-    "directory": ".",
+    "directory": "./public",
     "not_found_handling": "single-page-application"
   }
 }

@@ -1,0 +1,3376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>毕业纪念相册</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg: #fff7ec;
+      --card: rgba(255, 248, 238, 0.82);
+      --card-solid: #fff8ee;
+      --gold: #d89435;
+      --gold-dark: #8b551f;
+      --orange: #f58b42;
+      --brown: #3a2416;
+      --muted: #8b735c;
+      --line: rgba(170, 115, 55, 0.18);
+      --shadow: 0 18px 45px rgba(95, 62, 26, 0.16);
+      /* 自定义封面图：这里是默认封面，不再使用第一张图 */
+      --hero-cover: url("photos_v2/large/DSC5052_large.webp");
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      color: var(--brown);
+      background:
+        radial-gradient(circle at top left, rgba(255, 207, 132, 0.35), transparent 30%),
+        linear-gradient(180deg, #fff4e4 0%, #fffaf3 40%, #fff6ea 100%);
+      padding-bottom: 96px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 42px;
+      background: rgba(255, 248, 239, 0.78);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(160, 105, 45, 0.12);
+    }
+
+.more {
+  cursor: pointer;
+  border: none;
+}
+
+.extra-photo {
+  display: none;
+}
+
+.gallery-grid.show-all .extra-photo {
+  display: block;
+}
+
+.post-grid .upload-tip {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 24px;
+  border-radius: 20px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(180, 120, 60, 0.12);
+}
+
+.danmaku-layer {
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.danmaku-layer.fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+}
+
+.danmaku-layer.partial {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 70px;
+  bottom: 14px;
+  z-index: 2;
+}
+
+.danmaku-layer.hidden {
+  display: none;
+}
+
+.danmaku-item {
+  position: absolute;
+  left: 100%;
+  white-space: nowrap;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+  animation-name: danmakuMove;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.danmaku-layer.fullscreen .danmaku-item {
+  background: rgba(255, 248, 236, 0.68);
+  color: #3a2416;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+}
+
+@keyframes danmakuMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-150vw);
+  }
+}
+
+.danmaku-mode-btn {
+  height: 42px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76) !important;
+  color: #8b551f !important;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.barrage-bar {
+  grid-template-columns: 130px 1fr 116px 108px;
+}
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 21px;
+      color: var(--gold-dark);
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #f4b259, #8c4a19);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(155, 90, 28, 0.22);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      font-size: 15px;
+      color: #4d3927;
+    }
+
+    .nav a {
+      position: relative;
+      padding: 25px 0;
+    }
+
+    .nav a.active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 17px;
+      width: 22px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--orange);
+      transform: translateX(-50%);
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .search {
+      width: 230px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(170, 115, 55, 0.14);
+      color: #a18b75;
+      font-size: 13px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f6c17b, #fff);
+      display: grid;
+      place-items: center;
+      color: var(--gold-dark);
+      font-weight: 800;
+      border: 2px solid rgba(255, 255, 255, 0.88);
+      box-shadow: 0 8px 18px rgba(90, 60, 30, 0.16);
+    }
+
+    .hero {
+      position: relative;
+      min-height: 760px;
+      padding-top: 70px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(48, 28, 12, 0.1), rgba(255, 244, 226, 0.1)),
+        var(--hero-cover) center/cover no-repeat;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 55% 34%, rgba(255, 225, 160, 0.56), transparent 24%),
+        linear-gradient(180deg, rgba(255, 230, 194, 0.25) 0%, rgba(40, 20, 8, 0.22) 55%, rgba(255, 244, 226, 1) 100%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(1160px, calc(100% - 36px));
+      margin: 0 auto;
+      min-height: 690px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .hero-title {
+      margin: 60px 0 8px;
+      font-size: clamp(56px, 8vw, 112px);
+      line-height: 1;
+      letter-spacing: 4px;
+      font-family: "STKaiti", "KaiTi", "Microsoft YaHei", serif;
+      color: #6b3512;
+      text-shadow:
+        0 3px 0 rgba(255, 238, 206, 0.7),
+        0 18px 34px rgba(80, 38, 10, 0.22);
+    }
+
+    .hero-subtitle {
+      margin: 0 0 34px;
+      font-size: clamp(17px, 2vw, 24px);
+      color: #6b4427;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 16px rgba(255, 244, 220, 0.82);
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .hero-btn {
+      min-width: 150px;
+      height: 56px;
+      padding: 0 28px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero-btn.primary {
+      color: #fff;
+      background: linear-gradient(135deg, #f0ad4f, #d3772f);
+      box-shadow: 0 14px 32px rgba(190, 100, 34, 0.3);
+    }
+
+    .hero-btn.glass {
+      color: #fff8ef;
+      background: rgba(60, 38, 24, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-btn.light {
+      color: #704214;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(185, 125, 55, 0.18);
+      box-shadow: 0 10px 22px rgba(90, 60, 30, 0.12);
+    }
+
+    .hero-btn.surprise.playing {
+      color: #fff;
+      background: linear-gradient(135deg, #ffb05f, #ff7148);
+      box-shadow: 0 14px 32px rgba(255, 110, 66, 0.35);
+    }
+
+    .bubble {
+      position: absolute;
+      z-index: 3;
+      padding: 12px 18px;
+      border-radius: 18px;
+      color: #7a4a20;
+      background: rgba(255, 247, 235, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      box-shadow: 0 14px 32px rgba(95, 62, 26, 0.14);
+      backdrop-filter: blur(12px);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .bubble.b1 { left: 5%; top: 17%; }
+    .bubble.b2 { left: 7%; top: 39%; }
+    .bubble.b3 { right: 10%; top: 23%; }
+    .bubble.b4 { right: 8%; top: 44%; }
+    .bubble.b5 { left: 48%; top: 20%; }
+
+    .stats-panel {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      width: min(800px, calc(100% - 36px));
+      padding: 20px 28px;
+      border-radius: 26px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      color: #fff9ed;
+      background: rgba(42, 27, 17, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      box-shadow: 0 22px 54px rgba(60, 35, 15, 0.26);
+      backdrop-filter: blur(16px);
+    }
+
+    .stat {
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .stat:last-child {
+      border-right: none;
+    }
+
+    .stat span {
+      display: block;
+      font-size: 13px;
+      opacity: 0.82;
+      margin-bottom: 4px;
+    }
+
+    .stat strong {
+      font-size: 32px;
+      color: #ffd894;
+      letter-spacing: 1px;
+    }
+
+    .feature-row {
+      width: min(1180px, calc(100% - 36px));
+      margin: -8px auto 34px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .feature-card {
+      min-height: 138px;
+      padding: 20px;
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, rgba(255, 224, 171, 0.95), rgba(255, 255, 255, 0.78));
+      font-size: 22px;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+
+    .feature-card {
+      color: inherit;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 58px rgba(95, 62, 26, 0.22);
+      border-color: rgba(216, 148, 53, 0.32);
+    }
+
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      right: -28px;
+      bottom: -34px;
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 186, 90, 0.22), transparent 68%);
+      pointer-events: none;
+    }
+
+    .feature-link {
+      display: inline-flex;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--gold-dark);
+    }
+
+    .section {
+      width: min(1180px, calc(100% - 36px));
+      margin: 38px auto;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 30px;
+      color: #5b3218;
+      font-family: "STKaiti", "KaiTi", "Microsoft YaHei", serif;
+    }
+
+    .section-desc {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .more {
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid var(--line);
+      color: #7b552c;
+      font-size: 14px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .photo-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      min-height: 170px;
+      background: #eee;
+      box-shadow: 0 16px 34px rgba(80, 52, 24, 0.12);
+      cursor: pointer;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 170px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .photo-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .photo-card .caption {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(40, 25, 15, 0.48);
+      color: #fff;
+      font-size: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .timeline {
+      padding: 22px;
+      border-radius: 26px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-top: 18px;
+      text-align: center;
+      color: #6b4427;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 6px rgba(216, 148, 53, 0.15);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .timeline-item span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .content-split {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 22px;
+    }
+
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .post-card {
+      padding: 12px;
+      border-radius: 20px;
+      background: var(--card-solid);
+      border: 1px solid rgba(180, 120, 60, 0.12);
+      box-shadow: 0 14px 30px rgba(90, 60, 30, 0.1);
+    }
+
+    .post-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: #6c4b2c;
+    }
+
+    .post-user .face {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #f2c37b;
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .post-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 14px;
+      display: block;
+    }
+
+    .post-card p {
+      min-height: 38px;
+      margin: 10px 0 8px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .post-foot {
+      display: flex;
+      justify-content: space-between;
+      color: #9a7452;
+      font-size: 12px;
+    }
+
+    .star-river {
+      min-height: 330px;
+      padding: 24px;
+      border-radius: 28px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(255, 155, 80, 0.45), transparent 20%),
+        linear-gradient(135deg, #31294f, #1e2441 60%, #101827);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .star-river::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px);
+      background-size: 38px 38px;
+      opacity: 0.2;
+    }
+
+    .star-river h3 {
+      position: relative;
+      margin: 0 0 20px;
+      font-size: 24px;
+    }
+
+    .message-pill {
+      position: relative;
+      margin: 14px 0;
+      padding: 12px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(10px);
+      font-size: 14px;
+    }
+
+    .barrage-bar {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      width: min(880px, calc(100% - 28px));
+      z-index: 80;
+      display: grid;
+      grid-template-columns: 130px 1fr 108px;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 999px;
+      background: rgba(255, 250, 242, 0.86);
+      border: 1px solid rgba(180, 120, 60, 0.18);
+      box-shadow: 0 18px 44px rgba(90, 60, 30, 0.18);
+      backdrop-filter: blur(14px);
+    }
+
+    .barrage-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-weight: 800;
+      color: var(--gold-dark);
+    }
+
+    .barrage-bar input {
+      height: 42px;
+      border: 1px solid rgba(180, 120, 60, 0.16);
+      border-radius: 999px;
+      padding: 0 16px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--brown);
+      font: inherit;
+    }
+
+    .barrage-bar button {
+      height: 42px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffad57, #f26f42);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(20, 12, 7, 0.78);
+      z-index: 120;
+      padding: 40px;
+    }
+
+    .lightbox.show {
+      display: grid;
+    }
+
+    .lightbox img {
+      max-width: min(1100px, 92vw);
+      max-height: 78vh;
+      object-fit: contain;
+      border-radius: 22px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    .close {
+      position: absolute;
+      top: 28px;
+      right: 34px;
+      width: 46px;
+      height: 46px;
+      border: none;
+      border-radius: 50%;
+      font-size: 30px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.9);
+      color: #4c2b18;
+    }
+
+    .download-btn {
+      position: absolute;
+      bottom: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, #f0ad4f, #d3772f);
+      font-weight: 800;
+    }
+
+    footer {
+      padding: 40px 20px 120px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        padding: 0 18px;
+      }
+
+      .nav,
+      .search {
+        display: none;
+      }
+
+      .stats-panel {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .feature-row,
+      .gallery-grid,
+      .post-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .content-split {
+        grid-template-columns: 1fr;
+      }
+
+      .barrage-bar {
+        grid-template-columns: 1fr 78px;
+        border-radius: 24px;
+      }
+
+      .barrage-label {
+        display: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        min-height: 700px;
+      }
+
+      .hero-title {
+        font-size: 56px;
+      }
+
+      .hero-btn {
+        width: min(260px, 100%);
+      }
+
+      .stats-panel {
+        position: relative;
+        bottom: auto;
+        margin-top: 42px;
+      }
+
+      .feature-row,
+      .gallery-grid,
+      .post-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    /* 当前版本追加：封面去假弹幕、投稿并入相册、照片详情互动 */
+    .star-river-tip {
+      position: relative;
+      z-index: 3;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 14px;
+    }
+
+    .caption strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .caption span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: 0.9;
+    }
+
+    .lightbox { align-items: center; }
+
+    .lightbox-panel {
+      width: min(1180px, 94vw);
+      max-height: 86vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) 380px;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .lightbox-preview-wrap {
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      background: rgba(0, 0, 0, 0.22);
+      overflow: hidden;
+    }
+
+    .lightbox img.lightbox-preview {
+      max-width: 100%;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 22px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    .lightbox-info {
+      max-height: 86vh;
+      overflow: auto;
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(255, 248, 238, 0.94);
+      color: var(--brown);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+    }
+
+    .modal-tag {
+      display: inline-block;
+      margin: 0 0 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(216, 148, 53, 0.13);
+      color: var(--gold-dark);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .lightbox-info h3 { margin: 0 0 10px; font-size: 24px; color: #5b3218; }
+    .photo-message { margin: 0 0 16px; line-height: 1.7; color: #765537; }
+    .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+
+    .like-btn {
+      height: 42px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, #ff9b6a, #ef5c3e);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .modal-actions .download-btn {
+      position: static;
+      transform: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      box-shadow: none;
+    }
+
+    .modal-block { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(170, 115, 55, 0.16); }
+    .modal-block h4 { margin: 0 0 10px; font-size: 16px; }
+    .modal-hint, .empty-note { margin: 6px 0; font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+    .photo-comment-form {
+      display: grid;
+      grid-template-columns: 1fr 72px;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .photo-comment-form input {
+      height: 38px;
+      border: 1px solid rgba(180, 120, 60, 0.18);
+      border-radius: 999px;
+      padding: 0 12px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .photo-comment-form button, .voice-actions button {
+      border: none;
+      border-radius: 999px;
+      background: #ffd891;
+      color: #4b2d13;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .comment-item, .voice-item {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.58);
+      font-size: 13px;
+      color: #5f432b;
+    }
+
+    .voice-actions { display: flex; gap: 10px; align-items: center; margin: 10px 0; }
+    .voice-actions button { height: 38px; padding: 0 16px; }
+    .voice-actions span { font-size: 12px; color: var(--muted); }
+    .voice-item audio { width: 100%; margin-bottom: 4px; }
+
+    @media (max-width: 980px) {
+      .lightbox-panel { grid-template-columns: 1fr; overflow: auto; }
+      .lightbox-info { max-height: none; }
+    }
+
+  
+
+    /* ===== 图片区域 UI 优化：更大、更舒展、手机端适配 ===== */
+    .section {
+      width: min(1480px, calc(100% - 40px));
+    }
+
+    #gallery.section {
+      width: min(1580px, calc(100% - 32px));
+      margin-top: 46px;
+    }
+
+    #gallery .section-head {
+      padding: 0 4px;
+      margin-bottom: 24px;
+    }
+
+    #gallery .section-title {
+      font-size: clamp(30px, 3.2vw, 44px);
+    }
+
+    #gallery .section-desc {
+      font-size: 15px;
+    }
+
+    #mainGallery.gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+      align-items: stretch;
+      grid-auto-flow: dense;
+    }
+
+    #mainGallery .photo-card {
+      min-height: unset;
+      aspect-ratio: 4 / 3;
+      border-radius: 26px;
+      background: rgba(255, 248, 238, 0.72);
+      box-shadow: 0 20px 46px rgba(80, 52, 24, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.65);
+    }
+
+    #mainGallery .photo-card img {
+      height: 100%;
+      min-height: 0;
+    }
+
+    #mainGallery .photo-card .caption {
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      background: linear-gradient(180deg, rgba(40, 25, 15, 0.18), rgba(40, 25, 15, 0.62));
+    }
+
+    #mainGallery .photo-card:nth-child(1) {
+      grid-column: span 2;
+      grid-row: span 2;
+      aspect-ratio: auto;
+      min-height: 560px;
+    }
+
+    #mainGallery .photo-card:nth-child(2),
+    #mainGallery .photo-card:nth-child(3) {
+      aspect-ratio: 16 / 10;
+    }
+
+    #mainGallery .photo-card:nth-child(4),
+    #mainGallery .photo-card:nth-child(5) {
+      aspect-ratio: 1 / 1;
+    }
+
+    #mainGallery.show-all .extra-photo {
+      display: block;
+    }
+
+    @media (min-width: 1500px) {
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+        gap: 28px;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        min-height: 620px;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      #gallery.section,
+      .section {
+        width: min(1120px, calc(100% - 28px));
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 18px;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        min-height: 460px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      #gallery.section,
+      .section {
+        width: calc(100% - 24px);
+      }
+
+      #gallery .section-head {
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5) {
+        grid-column: auto;
+        grid-row: auto;
+        min-height: unset;
+        aspect-ratio: 4 / 3;
+        border-radius: 22px;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        grid-column: span 2;
+        aspect-ratio: 16 / 9;
+        min-height: unset;
+      }
+
+      #mainGallery .photo-card .caption {
+        font-size: 13px;
+        padding: 10px 12px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      #gallery.section,
+      .section {
+        width: calc(100% - 20px);
+        margin: 30px auto;
+      }
+
+      #gallery .section-head {
+        display: block;
+        margin-bottom: 16px;
+      }
+
+      #gallery .more {
+        margin-top: 12px;
+        width: 100%;
+        height: 44px;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(1),
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5) {
+        grid-column: auto;
+        grid-row: auto;
+        aspect-ratio: 4 / 3;
+        min-height: unset;
+        border-radius: 20px;
+      }
+
+      #mainGallery .photo-card .caption {
+        font-size: 13px;
+      }
+    }
+
+  
+
+    /* ===== 相册瀑布/拼贴布局 V2：展开后也保持不规则，手机端自适应多列 ===== */
+    #gallery.section {
+      width: min(1680px, calc(100% - 28px));
+    }
+
+    #mainGallery.gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(14px, 1.35vw, 24px);
+      align-items: stretch;
+      grid-auto-flow: dense;
+    }
+
+    #mainGallery .photo-card {
+      grid-column: span 3;
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+      border-radius: clamp(18px, 1.7vw, 28px);
+    }
+
+    #mainGallery .photo-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+    }
+
+    /* 非展开状态的精选区：第一张大卡，其余交错 */
+    #mainGallery .photo-card:nth-child(1) {
+      grid-column: span 6;
+      grid-row: span 2;
+      aspect-ratio: auto;
+      min-height: clamp(440px, 38vw, 650px);
+    }
+
+    #mainGallery .photo-card:nth-child(2),
+    #mainGallery .photo-card:nth-child(3) {
+      grid-column: span 3;
+      aspect-ratio: 16 / 10;
+    }
+
+    #mainGallery .photo-card:nth-child(4),
+    #mainGallery .photo-card:nth-child(5) {
+      grid-column: span 3;
+      aspect-ratio: 1 / 1;
+    }
+
+    /* 展开后：后续照片也进入类似拼贴的不规则排布，而不是一排小方块 */
+    #mainGallery.show-all .extra-photo {
+      display: block;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(n+6) {
+      grid-column: span 3;
+      grid-row: auto;
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+6) {
+      grid-column: span 4;
+      aspect-ratio: 16 / 10;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+7) {
+      grid-column: span 3;
+      aspect-ratio: 1 / 1;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+8) {
+      grid-column: span 5;
+      aspect-ratio: 16 / 9;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+9) {
+      grid-column: span 3;
+      aspect-ratio: 4 / 5;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+10) {
+      grid-column: span 4;
+      aspect-ratio: 4 / 3;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+11) {
+      grid-column: span 5;
+      aspect-ratio: 3 / 2;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+12) {
+      grid-column: span 3;
+      aspect-ratio: 1 / 1;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+13) {
+      grid-column: span 4;
+      aspect-ratio: 5 / 4;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+14) {
+      grid-column: span 5;
+      aspect-ratio: 16 / 10;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+15) {
+      grid-column: span 3;
+      aspect-ratio: 4 / 3;
+    }
+
+    @media (min-width: 1500px) {
+      #mainGallery.gallery-grid {
+        gap: 26px;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      #gallery.section {
+        width: calc(100% - 24px);
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery.show-all .photo-card:nth-child(n+6) {
+        grid-column: span 2;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        grid-column: span 4;
+        min-height: clamp(360px, 42vw, 520px);
+      }
+
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5) {
+        grid-column: span 2;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(8n+6) {
+        grid-column: span 3;
+        aspect-ratio: 16 / 10;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(8n+7) {
+        grid-column: span 2;
+        aspect-ratio: 1 / 1;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(8n+8) {
+        grid-column: span 3;
+        aspect-ratio: 3 / 2;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(8n+9) {
+        grid-column: span 2;
+        aspect-ratio: 4 / 5;
+      }
+    }
+
+    @media (max-width: 760px) {
+      #gallery.section {
+        width: calc(100% - 18px);
+        margin-top: 32px;
+      }
+
+      #gallery .section-head {
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+      }
+
+      #gallery .more {
+        width: auto;
+        min-width: 108px;
+        height: 42px;
+        margin-top: 0;
+        padding: 0 14px;
+        white-space: nowrap;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5),
+      #mainGallery.show-all .photo-card:nth-child(n+6) {
+        grid-column: span 3;
+        grid-row: auto;
+        aspect-ratio: 1 / 1;
+        min-height: 0;
+        border-radius: 18px;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        grid-column: span 6;
+        aspect-ratio: 16 / 10;
+        min-height: 0;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(6n+6),
+      #mainGallery.show-all .photo-card:nth-child(6n+10) {
+        grid-column: span 6;
+        aspect-ratio: 16 / 9;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(6n+7),
+      #mainGallery.show-all .photo-card:nth-child(6n+8),
+      #mainGallery.show-all .photo-card:nth-child(6n+9),
+      #mainGallery.show-all .photo-card:nth-child(6n+11) {
+        grid-column: span 3;
+        aspect-ratio: 1 / 1;
+      }
+
+      #mainGallery .photo-card .caption {
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        padding: 8px 10px;
+        font-size: 12px;
+        border-radius: 12px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      #gallery.section {
+        width: calc(100% - 14px);
+      }
+
+      #gallery .section-head {
+        display: block;
+      }
+
+      #gallery .more {
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5),
+      #mainGallery.show-all .photo-card:nth-child(n+6) {
+        grid-column: span 2;
+        aspect-ratio: 1 / 1;
+        border-radius: 16px;
+      }
+
+      #mainGallery .photo-card:nth-child(1),
+      #mainGallery.show-all .photo-card:nth-child(6n+6),
+      #mainGallery.show-all .photo-card:nth-child(6n+10) {
+        grid-column: span 4;
+        aspect-ratio: 16 / 10;
+      }
+    }
+
+
+    /* ===== 最终稳定相册布局：展开后也保持拼贴，移动端自动多列，避免重叠 ===== */
+    #gallery.section {
+      width: min(1540px, calc(100% - 28px)) !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    #mainGallery.gallery-grid {
+      width: 100% !important;
+      margin: 0 auto !important;
+      display: grid !important;
+      grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+      gap: 22px !important;
+      grid-auto-flow: dense !important;
+      align-items: stretch !important;
+    }
+
+    #mainGallery .photo-card {
+      position: relative !important;
+      display: block !important;
+      overflow: hidden !important;
+      grid-column: span 3 !important;
+      grid-row: auto !important;
+      aspect-ratio: 4 / 3 !important;
+      min-height: 0 !important;
+      height: auto !important;
+      border-radius: 24px !important;
+      background: rgba(255, 248, 238, 0.72) !important;
+      box-shadow: 0 18px 38px rgba(80, 52, 24, 0.14) !important;
+      border: 1px solid rgba(255, 255, 255, 0.65) !important;
+    }
+
+    #mainGallery .photo-card:nth-child(1) {
+      grid-column: span 6 !important;
+      grid-row: auto !important;
+      aspect-ratio: 16 / 9 !important;
+      min-height: 0 !important;
+    }
+
+    #mainGallery .photo-card:nth-child(6n + 2) {
+      grid-column: span 4 !important;
+      aspect-ratio: 3 / 2 !important;
+    }
+
+    #mainGallery .photo-card:nth-child(6n + 3) {
+      grid-column: span 3 !important;
+      aspect-ratio: 1 / 1 !important;
+    }
+
+    #mainGallery .photo-card:nth-child(6n + 4) {
+      grid-column: span 5 !important;
+      aspect-ratio: 16 / 10 !important;
+    }
+
+    #mainGallery .photo-card:nth-child(6n + 5) {
+      grid-column: span 3 !important;
+      aspect-ratio: 4 / 5 !important;
+    }
+
+    #mainGallery .photo-card:nth-child(6n + 6) {
+      grid-column: span 4 !important;
+      aspect-ratio: 4 / 3 !important;
+    }
+
+    #mainGallery .photo-card:nth-child(9n + 1):not(:first-child) {
+      grid-column: span 6 !important;
+      aspect-ratio: 16 / 9 !important;
+    }
+
+    #mainGallery .photo-card img {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 0 !important;
+      object-fit: cover !important;
+      display: block !important;
+    }
+
+    #mainGallery .photo-card .caption {
+      left: 14px !important;
+      right: 14px !important;
+      bottom: 14px !important;
+      padding: 10px 12px !important;
+      border-radius: 16px !important;
+      font-size: 14px !important;
+      background: linear-gradient(180deg, rgba(40, 25, 15, 0.18), rgba(40, 25, 15, 0.64)) !important;
+    }
+
+    #mainGallery .extra-photo {
+      display: none !important;
+    }
+
+    #mainGallery.show-all .extra-photo {
+      display: block !important;
+    }
+
+    @media (max-width: 1180px) {
+      #gallery.section {
+        width: calc(100% - 24px) !important;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(8, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(6n + 2),
+      #mainGallery .photo-card:nth-child(6n + 3),
+      #mainGallery .photo-card:nth-child(6n + 4),
+      #mainGallery .photo-card:nth-child(6n + 5),
+      #mainGallery .photo-card:nth-child(6n + 6),
+      #mainGallery .photo-card:nth-child(9n + 1):not(:first-child) {
+        grid-column: span 4 !important;
+        grid-row: auto !important;
+        aspect-ratio: 4 / 3 !important;
+        min-height: 0 !important;
+      }
+
+      #mainGallery .photo-card:nth-child(1),
+      #mainGallery .photo-card:nth-child(7n + 1):not(:first-child) {
+        grid-column: span 8 !important;
+        aspect-ratio: 16 / 9 !important;
+      }
+    }
+
+    @media (max-width: 720px) {
+      #gallery.section {
+        width: calc(100% - 20px) !important;
+      }
+
+      #gallery .section-head {
+        display: block !important;
+        margin-bottom: 16px !important;
+      }
+
+      #gallery .more {
+        margin-top: 12px !important;
+        width: 100% !important;
+        height: 44px !important;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(6n + 2),
+      #mainGallery .photo-card:nth-child(6n + 3),
+      #mainGallery .photo-card:nth-child(6n + 4),
+      #mainGallery .photo-card:nth-child(6n + 5),
+      #mainGallery .photo-card:nth-child(6n + 6),
+      #mainGallery .photo-card:nth-child(9n + 1):not(:first-child),
+      #mainGallery .photo-card:nth-child(7n + 1):not(:first-child) {
+        grid-column: span 2 !important;
+        aspect-ratio: 1 / 1 !important;
+        border-radius: 18px !important;
+      }
+
+      #mainGallery .photo-card:nth-child(1),
+      #mainGallery .photo-card:nth-child(8n + 1):not(:first-child) {
+        grid-column: span 4 !important;
+        aspect-ratio: 16 / 10 !important;
+      }
+
+      #mainGallery .photo-card .caption {
+        left: 8px !important;
+        right: 8px !important;
+        bottom: 8px !important;
+        padding: 7px 9px !important;
+        border-radius: 12px !important;
+        font-size: 12px !important;
+      }
+    }
+
+    @media (max-width: 420px) {
+      #gallery.section {
+        width: calc(100% - 14px) !important;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(6n + 2),
+      #mainGallery .photo-card:nth-child(6n + 3),
+      #mainGallery .photo-card:nth-child(6n + 4),
+      #mainGallery .photo-card:nth-child(6n + 5),
+      #mainGallery .photo-card:nth-child(6n + 6),
+      #mainGallery .photo-card:nth-child(9n + 1):not(:first-child),
+      #mainGallery .photo-card:nth-child(7n + 1):not(:first-child) {
+        grid-column: span 1 !important;
+        aspect-ratio: 1 / 1 !important;
+      }
+
+      #mainGallery .photo-card:nth-child(1),
+      #mainGallery .photo-card:nth-child(6n + 1):not(:first-child) {
+        grid-column: span 2 !important;
+        aspect-ratio: 16 / 10 !important;
+      }
+    }
+
+  
+/* ===== 最终版：按照片原始横竖比例瀑布流排布，竖图竖放、横图横放 ===== */
+.gallery-shell {
+  width: min(1680px, calc(100% - 28px)) !important;
+  margin-top: 46px !important;
+}
+
+.gallery-page-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 390px);
+  gap: clamp(18px, 2vw, 32px);
+  align-items: start;
+}
+
+.gallery-main-area {
+  min-width: 0;
+}
+
+.gallery-side-area {
+  position: sticky;
+  top: 92px;
+  align-self: start;
+}
+
+.side-wall-head {
+  margin-bottom: 14px;
+  padding: 18px 20px;
+  border-radius: 24px;
+  background: rgba(255, 248, 238, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 14px 32px rgba(90, 60, 30, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+.side-wall-head span {
+  display: block;
+  margin-bottom: 6px;
+  color: rgba(139, 85, 31, 0.62);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.side-wall-head strong {
+  display: block;
+  color: #5b3218;
+  font-size: 24px;
+  font-family: "STKaiti", "KaiTi", "Microsoft YaHei", serif;
+}
+
+.side-wall-head p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.gallery-side-area .star-river {
+  min-height: 520px;
+  border-radius: 28px;
+}
+
+/* 用 CSS columns 做瀑布流，不再给照片强行套横屏/方形框 */
+#mainGallery.gallery-grid {
+  display: block !important;
+  column-width: 285px !important;
+  column-gap: 22px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+#mainGallery .photo-card,
+#mainGallery .photo-card:nth-child(1),
+#mainGallery .photo-card:nth-child(6n + 2),
+#mainGallery .photo-card:nth-child(6n + 3),
+#mainGallery .photo-card:nth-child(6n + 4),
+#mainGallery .photo-card:nth-child(6n + 5),
+#mainGallery .photo-card:nth-child(6n + 6),
+#mainGallery .photo-card:nth-child(9n + 1):not(:first-child),
+#mainGallery .photo-card:nth-child(7n + 1):not(:first-child),
+#mainGallery .photo-card:nth-child(8n + 1):not(:first-child) {
+  display: inline-block !important;
+  width: 100% !important;
+  margin: 0 0 22px !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  aspect-ratio: auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  border-radius: 24px !important;
+  background: rgba(255, 248, 238, 0.82) !important;
+  box-shadow: 0 18px 38px rgba(80, 52, 24, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+}
+
+#mainGallery .photo-card img,
+#mainGallery .photo-card:nth-child(1) img {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: block !important;
+  object-fit: initial !important;
+  background: rgba(255, 248, 238, 0.82) !important;
+}
+
+#mainGallery .photo-card:hover img {
+  transform: none !important;
+  filter: brightness(1.02);
+}
+
+#mainGallery .photo-card .caption {
+  left: 12px !important;
+  right: 12px !important;
+  bottom: 12px !important;
+  padding: 10px 12px !important;
+  border-radius: 16px !important;
+  font-size: 13px !important;
+  background: linear-gradient(180deg, rgba(40, 25, 15, 0.10), rgba(40, 25, 15, 0.68)) !important;
+}
+
+#mainGallery .extra-photo {
+  display: none !important;
+}
+
+#mainGallery.show-all .extra-photo {
+  display: inline-block !important;
+}
+
+/* ===== 详情预览：大图始终完整显示 ===== */
+.lightbox {
+  padding: 34px 22px 92px !important;
+  background:
+    radial-gradient(circle at center, rgba(255, 214, 150, 0.12), transparent 38%),
+    rgba(18, 10, 5, 0.88) !important;
+}
+
+.lightbox-panel {
+  width: min(1220px, 94vw) !important;
+  max-height: 88vh !important;
+  grid-template-columns: minmax(0, 1.35fr) 390px !important;
+}
+
+.lightbox-preview-wrap {
+  min-height: 0 !important;
+  height: min(78vh, 760px) !important;
+  border-radius: 24px !important;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+    rgba(0, 0, 0, 0.28) !important;
+}
+
+.lightbox img.lightbox-preview,
+#lightboxImg {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  border-radius: 22px !important;
+}
+
+/* ===== 重新绘制弹幕输入框：避免挤压 ===== */
+.barrage-bar {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: 22px !important;
+  transform: translateX(-50%) !important;
+  z-index: 90 !important;
+  width: min(900px, calc(100vw - 28px)) !important;
+  min-height: 68px !important;
+  padding: 10px !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(230px, 1fr) auto auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+  border-radius: 26px !important;
+  background: linear-gradient(135deg, rgba(255, 250, 242, 0.96), rgba(255, 238, 210, 0.90)) !important;
+  border: 1px solid rgba(190, 125, 58, 0.18) !important;
+  box-shadow:
+    0 18px 46px rgba(92, 55, 22, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(18px) !important;
+}
+
+.barrage-label {
+  height: 46px !important;
+  padding: 0 16px !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  color: #7c4313 !important;
+  background: rgba(255, 255, 255, 0.58) !important;
+  border: 1px solid rgba(194, 126, 55, 0.14) !important;
+}
+
+.barrage-bar input {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 46px !important;
+  border: 1px solid rgba(194, 126, 55, 0.18) !important;
+  border-radius: 999px !important;
+  padding: 0 18px !important;
+  outline: none !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  color: #3a2416 !important;
+  font: inherit !important;
+  box-shadow: inset 0 2px 8px rgba(90, 55, 25, 0.05) !important;
+}
+
+.barrage-bar button {
+  height: 46px !important;
+  padding: 0 18px !important;
+  border: none !important;
+  border-radius: 999px !important;
+  white-space: nowrap !important;
+  font: inherit !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+}
+
+.barrage-bar button[type="submit"] {
+  color: #fff !important;
+  background: linear-gradient(135deg, #ffad57, #f26f42) !important;
+  box-shadow: 0 10px 22px rgba(242, 111, 66, 0.26) !important;
+}
+
+.danmaku-mode-btn,
+#danmakuModeBtn {
+  color: #7c4313 !important;
+  background: rgba(255, 255, 255, 0.74) !important;
+  border: 1px solid rgba(194, 126, 55, 0.18) !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 1180px) {
+  .gallery-page-layout {
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 18px;
+  }
+
+  #mainGallery.gallery-grid {
+    column-width: 235px !important;
+    column-gap: 16px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .gallery-page-layout {
+    display: block;
+  }
+
+  .gallery-side-area {
+    position: static;
+    margin-top: 22px;
+  }
+
+  .gallery-side-area .star-river {
+    min-height: 360px;
+  }
+
+  #mainGallery.gallery-grid {
+    column-width: 205px !important;
+    column-gap: 14px !important;
+  }
+
+  .lightbox-panel {
+    grid-template-columns: 1fr !important;
+    overflow: auto !important;
+  }
+
+  .lightbox-preview-wrap {
+    height: min(58vh, 560px) !important;
+  }
+
+  .barrage-bar {
+    width: calc(100vw - 24px) !important;
+    grid-template-columns: 1fr auto auto !important;
+    border-radius: 24px !important;
+  }
+
+  .barrage-label {
+    grid-column: 1 / 4 !important;
+    width: fit-content !important;
+    height: 34px !important;
+    padding: 0 12px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    padding-bottom: 150px !important;
+  }
+
+  #gallery.section,
+  .gallery-shell {
+    width: calc(100% - 16px) !important;
+  }
+
+  #mainGallery.gallery-grid {
+    column-width: 150px !important;
+    column-gap: 10px !important;
+  }
+
+  #mainGallery .photo-card {
+    margin-bottom: 10px !important;
+    border-radius: 16px !important;
+  }
+
+  #mainGallery .photo-card .caption {
+    left: 7px !important;
+    right: 7px !important;
+    bottom: 7px !important;
+    padding: 7px 8px !important;
+    font-size: 12px !important;
+    border-radius: 11px !important;
+  }
+
+  .barrage-bar {
+    bottom: 12px !important;
+    width: calc(100vw - 18px) !important;
+    padding: 10px !important;
+    border-radius: 22px !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .barrage-label {
+    grid-column: 1 / 3 !important;
+    justify-self: start !important;
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+
+  .barrage-bar input {
+    grid-column: 1 / 3 !important;
+    height: 44px !important;
+    border-radius: 16px !important;
+  }
+
+  #danmakuModeBtn {
+    grid-column: 1 / 2 !important;
+  }
+
+  .barrage-bar button[type="submit"] {
+    grid-column: 2 / 3 !important;
+  }
+
+  .lightbox {
+    padding: 22px 10px 98px !important;
+  }
+
+  .lightbox-panel {
+    width: 96vw !important;
+    max-height: 88vh !important;
+    gap: 12px !important;
+  }
+
+  .lightbox-preview-wrap {
+    height: min(52vh, 420px) !important;
+    border-radius: 16px !important;
+  }
+
+  .lightbox-info {
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  #mainGallery.gallery-grid {
+    column-width: 138px !important;
+  }
+}
+
+
+
+/* ===== 最终调整：贯穿式留言星河 + 更高密度照片瀑布流 ===== */
+.gallery-shell {
+  width: min(1720px, calc(100% - 24px)) !important;
+  margin-top: 42px !important;
+}
+
+.gallery-head-compact {
+  margin-bottom: 16px !important;
+  padding: 0 4px !important;
+}
+
+.gallery-head-compact .section-desc {
+  font-size: 14px !important;
+}
+
+.gallery-wall-wide {
+  width: 100% !important;
+  min-height: 220px !important;
+  margin: 0 0 18px !important;
+  padding: 18px 22px !important;
+  border-radius: 28px !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.wall-title-row {
+  position: relative !important;
+  z-index: 3 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+  pointer-events: none !important;
+}
+
+.wall-title-row span {
+  display: block !important;
+  margin-bottom: 4px !important;
+  color: rgba(255, 255, 255, 0.62) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.14em !important;
+}
+
+.wall-title-row h3 {
+  margin: 0 !important;
+  font-size: 24px !important;
+}
+
+.wall-title-row p {
+  max-width: 420px !important;
+  margin: 4px 0 0 !important;
+  color: rgba(255, 255, 255, 0.70) !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  text-align: right !important;
+}
+
+.gallery-wall-wide .danmaku-layer.partial {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 62px !important;
+  bottom: 10px !important;
+  z-index: 2 !important;
+}
+
+/* 覆盖之前的侧栏布局，去掉右侧空白，照片区域更密 */
+.gallery-page-layout,
+.gallery-main-area,
+.gallery-side-area {
+  display: block !important;
+  width: 100% !important;
+  position: static !important;
+}
+
+.side-wall-head,
+.gallery-side-area .star-river {
+  display: none !important;
+}
+
+#mainGallery.gallery-grid {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  column-width: 215px !important;
+  column-gap: 14px !important;
+  column-fill: balance !important;
+}
+
+#mainGallery .photo-card,
+#mainGallery .photo-card:nth-child(1),
+#mainGallery .photo-card:nth-child(6n + 2),
+#mainGallery .photo-card:nth-child(6n + 3),
+#mainGallery .photo-card:nth-child(6n + 4),
+#mainGallery .photo-card:nth-child(6n + 5),
+#mainGallery .photo-card:nth-child(6n + 6),
+#mainGallery .photo-card:nth-child(9n + 1):not(:first-child),
+#mainGallery .photo-card:nth-child(7n + 1):not(:first-child),
+#mainGallery .photo-card:nth-child(8n + 1):not(:first-child) {
+  display: inline-block !important;
+  width: 100% !important;
+  margin: 0 0 14px !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  aspect-ratio: auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  border-radius: 18px !important;
+  background: rgba(255, 248, 238, 0.88) !important;
+  box-shadow: 0 12px 26px rgba(80, 52, 24, 0.11) !important;
+  border: 1px solid rgba(255, 255, 255, 0.62) !important;
+}
+
+#mainGallery .photo-card img,
+#mainGallery .photo-card:nth-child(1) img {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: block !important;
+  object-fit: initial !important;
+  background: rgba(255, 248, 238, 0.82) !important;
+}
+
+#mainGallery .photo-card:hover img {
+  transform: none !important;
+  filter: brightness(1.03) saturate(1.02) !important;
+}
+
+#mainGallery .photo-card .caption {
+  left: 8px !important;
+  right: 8px !important;
+  bottom: 8px !important;
+  padding: 7px 9px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+  background: linear-gradient(180deg, rgba(40, 25, 15, 0.08), rgba(40, 25, 15, 0.62)) !important;
+}
+
+#mainGallery .caption strong {
+  font-size: 12px !important;
+  margin-bottom: 1px !important;
+}
+
+#mainGallery .caption span {
+  font-size: 11px !important;
+}
+
+#mainGallery .extra-photo {
+  display: none !important;
+}
+
+#mainGallery.show-all .extra-photo {
+  display: inline-block !important;
+}
+
+@media (min-width: 1600px) {
+  #mainGallery.gallery-grid {
+    column-width: 235px !important;
+    column-gap: 16px !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  .gallery-shell {
+    width: calc(100% - 20px) !important;
+  }
+
+  #mainGallery.gallery-grid {
+    column-width: 190px !important;
+    column-gap: 12px !important;
+  }
+
+  .gallery-wall-wide {
+    min-height: 205px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .gallery-shell {
+    width: calc(100% - 14px) !important;
+    margin-top: 30px !important;
+  }
+
+  .gallery-head-compact {
+    display: block !important;
+    margin-bottom: 12px !important;
+  }
+
+  .gallery-head-compact .more {
+    width: 100% !important;
+    height: 42px !important;
+    margin-top: 10px !important;
+  }
+
+  .gallery-wall-wide {
+    min-height: 180px !important;
+    margin-bottom: 12px !important;
+    padding: 15px !important;
+    border-radius: 22px !important;
+  }
+
+  .wall-title-row {
+    display: block !important;
+  }
+
+  .wall-title-row h3 {
+    font-size: 20px !important;
+  }
+
+  .wall-title-row p {
+    max-width: none !important;
+    text-align: left !important;
+    font-size: 12px !important;
+    margin-top: 6px !important;
+  }
+
+  .gallery-wall-wide .danmaku-layer.partial {
+    top: 72px !important;
+    bottom: 8px !important;
+  }
+
+  #mainGallery.gallery-grid {
+    column-width: 150px !important;
+    column-gap: 9px !important;
+  }
+
+  #mainGallery .photo-card,
+  #mainGallery .photo-card:nth-child(1),
+  #mainGallery .photo-card:nth-child(6n + 2),
+  #mainGallery .photo-card:nth-child(6n + 3),
+  #mainGallery .photo-card:nth-child(6n + 4),
+  #mainGallery .photo-card:nth-child(6n + 5),
+  #mainGallery .photo-card:nth-child(6n + 6) {
+    margin-bottom: 9px !important;
+    border-radius: 15px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  #mainGallery.gallery-grid {
+    column-width: 132px !important;
+    column-gap: 8px !important;
+  }
+
+  #mainGallery .photo-card .caption {
+    padding: 6px 7px !important;
+    font-size: 11px !important;
+  }
+}
+
+
+
+/* ===== 修正版：右侧固定贯穿式留言星河，封面不再出现弹幕 ===== */
+.danmaku-layer.fullscreen,
+#fullscreenDanmakuLayer {
+  display: none !important;
+}
+
+.fixed-star-river {
+  position: fixed !important;
+  top: 88px !important;
+  right: 16px !important;
+  bottom: 104px !important;
+  width: 320px !important;
+  z-index: 78 !important;
+  overflow: hidden !important;
+  border-radius: 30px !important;
+  color: #fff !important;
+  background:
+    radial-gradient(circle at 48% 24%, rgba(255, 180, 105, 0.42), transparent 30%),
+    linear-gradient(160deg, rgba(58, 45, 92, 0.96), rgba(23, 29, 58, 0.96) 58%, rgba(12, 18, 34, 0.97)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 24px 60px rgba(44, 29, 18, 0.22) !important;
+  backdrop-filter: blur(18px) !important;
+  transition: transform .25s ease, opacity .25s ease !important;
+}
+
+.fixed-star-river::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.8) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: .18;
+  pointer-events: none;
+}
+
+.fixed-star-river.wall-hidden {
+  transform: translateX(calc(100% + 24px)) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.fixed-wall-head {
+  position: relative !important;
+  z-index: 3 !important;
+  padding: 20px 20px 12px !important;
+  pointer-events: none !important;
+}
+
+.fixed-wall-head span {
+  display: block !important;
+  margin-bottom: 6px !important;
+  color: rgba(255,255,255,.58) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: .14em !important;
+}
+
+.fixed-wall-head strong {
+  display: block !important;
+  color: #fff7ec !important;
+  font-size: 24px !important;
+  font-family: "STKaiti", "KaiTi", "Microsoft YaHei", serif !important;
+}
+
+.fixed-wall-head em {
+  display: block !important;
+  margin-top: 8px !important;
+  color: rgba(255,255,255,.66) !important;
+  font-size: 13px !important;
+  font-style: normal !important;
+}
+
+.fixed-star-river .danmaku-layer.partial {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 104px !important;
+  bottom: 14px !important;
+  z-index: 2 !important;
+  display: block !important;
+  overflow: hidden !important;
+}
+
+.fixed-star-river .danmaku-item {
+  background: rgba(255,255,255,.16) !important;
+  border: 1px solid rgba(255,255,255,.20) !important;
+  color: #fff !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,.24) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18) !important;
+  font-size: 14px !important;
+  max-width: max-content !important;
+}
+
+@media (min-width: 1120px) {
+  body {
+    padding-right: 360px !important;
+  }
+
+  .topbar {
+    right: 360px !important;
+  }
+
+  .barrage-bar {
+    left: calc((100vw - 360px) / 2) !important;
+    width: min(820px, calc(100vw - 400px)) !important;
+  }
+}
+
+@media (max-width: 1119px) {
+  .fixed-star-river {
+    top: 82px !important;
+    right: 10px !important;
+    bottom: 110px !important;
+    width: min(285px, 38vw) !important;
+    border-radius: 24px !important;
+  }
+
+  .fixed-wall-head {
+    padding: 14px 14px 8px !important;
+  }
+
+  .fixed-wall-head strong {
+    font-size: 19px !important;
+  }
+
+  .fixed-wall-head em,
+  .fixed-wall-head span {
+    font-size: 11px !important;
+  }
+
+  .fixed-star-river .danmaku-layer.partial {
+    top: 84px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .fixed-star-river {
+    width: 128px !important;
+    top: 76px !important;
+    right: 7px !important;
+    bottom: 142px !important;
+    border-radius: 20px !important;
+    opacity: .94 !important;
+  }
+
+  .fixed-wall-head {
+    padding: 10px 9px 6px !important;
+  }
+
+  .fixed-wall-head span,
+  .fixed-wall-head em {
+    display: none !important;
+  }
+
+  .fixed-wall-head strong {
+    font-size: 15px !important;
+    line-height: 1.25 !important;
+  }
+
+  .fixed-star-river .danmaku-layer.partial {
+    top: 48px !important;
+    bottom: 10px !important;
+  }
+
+  .fixed-star-river .danmaku-item {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
+}
+
+/* 底部输入框在右侧留言墙存在时不再挤压，手机端自动换行 */
+.barrage-bar {
+  min-height: 68px !important;
+  padding: 10px !important;
+  grid-template-columns: auto minmax(220px, 1fr) auto auto !important;
+  border-radius: 26px !important;
+}
+
+.barrage-bar input {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+@media (max-width: 760px) {
+  body { padding-bottom: 154px !important; }
+  .barrage-bar {
+    bottom: 12px !important;
+    width: calc(100vw - 18px) !important;
+    left: 50% !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    border-radius: 22px !important;
+  }
+  .barrage-label {
+    display: flex !important;
+    grid-column: 1 / 3 !important;
+    justify-self: start !important;
+    height: 30px !important;
+    font-size: 12px !important;
+  }
+  .barrage-bar input {
+    grid-column: 1 / 3 !important;
+    height: 44px !important;
+    border-radius: 16px !important;
+  }
+  #danmakuModeBtn { grid-column: 1 / 2 !important; }
+  .barrage-bar button[type="submit"] { grid-column: 2 / 3 !important; }
+}
+
+
+
+/* ===== 最终修正：留言星河从首页下方开始，贯穿后续内容，不覆盖封面 ===== */
+.after-hero-layout {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 920px !important;
+  padding: 34px 360px 48px 0 !important;
+}
+
+.after-hero-content {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.after-hero-content > .feature-row {
+  margin-top: 0 !important;
+}
+
+.after-hero-layout .fixed-star-river {
+  position: absolute !important;
+  top: 34px !important;
+  right: 16px !important;
+  bottom: 48px !important;
+  width: 320px !important;
+  height: auto !important;
+  z-index: 12 !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.after-hero-layout .fixed-star-river.wall-hidden {
+  transform: translateX(calc(100% + 24px)) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.after-hero-layout .fixed-star-river .danmaku-layer.partial {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 104px !important;
+  bottom: 14px !important;
+  display: block !important;
+}
+
+@media (min-width: 1120px) {
+  body {
+    padding-right: 0 !important;
+  }
+
+  .topbar {
+    right: 0 !important;
+  }
+
+  .barrage-bar {
+    left: 50% !important;
+    width: min(880px, calc(100vw - 28px)) !important;
+  }
+}
+
+@media (max-width: 1119px) {
+  .after-hero-layout {
+    padding: 28px 310px 44px 0 !important;
+  }
+
+  .after-hero-layout .fixed-star-river {
+    top: 28px !important;
+    right: 10px !important;
+    bottom: 44px !important;
+    width: min(285px, 34vw) !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .after-hero-layout {
+    padding: 24px 0 36px !important;
+  }
+
+  .after-hero-content {
+    width: 100% !important;
+  }
+
+  .after-hero-layout .fixed-star-river {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: calc(100% - 24px) !important;
+    height: 320px !important;
+    margin: 0 auto 28px !important;
+    border-radius: 24px !important;
+  }
+
+  .after-hero-layout .fixed-star-river .danmaku-layer.partial {
+    top: 88px !important;
+    bottom: 12px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .after-hero-layout .fixed-star-river {
+    width: calc(100% - 18px) !important;
+    height: 260px !important;
+    border-radius: 20px !important;
+  }
+
+  .after-hero-layout .fixed-wall-head {
+    padding: 14px 14px 8px !important;
+  }
+
+  .after-hero-layout .fixed-wall-head strong {
+    font-size: 18px !important;
+  }
+
+  .after-hero-layout .fixed-wall-head em {
+    display: block !important;
+    font-size: 11px !important;
+  }
+
+  .after-hero-layout .fixed-star-river .danmaku-layer.partial {
+    top: 78px !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<audio id="bgm" src="music/bgm.mp3" loop preload="auto"></audio>
+
+
+<header class="topbar">
+  <a class="brand" href="#">
+    <span class="brand-icon">🎓</span>
+    <span>毕业纪念相册</span>
+  </a>
+
+  <nav class="nav">
+    <a href="#" class="active">首页</a>
+    <a href="#timeline">纪念时光轴</a>
+    <a href="upload.html">上传照片</a>
+    <a href="#starRiver">留言星河</a>
+    <a href="#about">关于我们</a>
+  </nav>
+
+  <div class="top-right">
+    <div class="search">🔍 搜索同学、照片、地点...</div>
+    <div class="avatar">涵</div>
+  </div>
+</header>
+
+<section class="hero">
+
+  <div class="hero-inner">
+    <h1 class="hero-title">毕业纪念相册</h1>
+    <p class="hero-subtitle">把青春收藏成光，等未来想起时再发亮 ✨</p>
+
+    <div class="hero-actions">
+      <a class="hero-btn primary" href="#gallery">📖 进入相册</a>
+      <button id="surpriseBtn" class="hero-btn glass surprise" type="button">✨ 点击有惊喜</button>
+      <a class="hero-btn light" href="upload.html">☁ 上传照片</a>
+    </div>
+  </div>
+
+<div class="stats-panel">
+  <div class="stat">
+    <span>待审核投稿</span>
+    <strong id="pendingCount">--</strong>
+  </div>
+
+  <div class="stat">
+    <span>已收录回忆</span>
+    <strong id="memoryCount">--</strong>
+  </div>
+
+  <div class="stat">
+    <span>已通过投稿</span>
+    <strong id="approvedCount">--</strong>
+  </div>
+
+  <div class="stat">
+    <span>累计访问</span>
+    <strong id="visitCount">--</strong>
+  </div>
+</div>
+</section>
+
+<main class="after-hero-layout" id="afterHeroLayout">
+  <aside class="fixed-star-river" id="starRiver">
+    <div class="fixed-wall-head">
+      <span>MESSAGE WALL</span>
+      <strong>✨ 留言星河</strong>
+      <em>从首页下方开始，贯穿后续内容</em>
+    </div>
+    <div id="partialDanmakuLayer" class="danmaku-layer partial"></div>
+  </aside>
+
+  <div class="after-hero-content">
+
+<section class="feature-row">
+  <a class="feature-card" href="time-capsule.html">
+    <div class="feature-icon">⏳</div>
+    <h3>时间胶囊</h3>
+    <p>写给未来的一封信，把此刻的心愿藏进毕业时光里。</p>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
+
+  <a class="feature-card" href="ai-repair.html">
+    <div class="feature-icon">🤖</div>
+    <h3>AI照片修复</h3>
+    <p>模拟照片增强、修复前后对比和智能配文入口。</p>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
+
+  <a class="feature-card" href="voice-message.html">
+    <div class="feature-icon">🎙</div>
+    <h3>语音留言</h3>
+    <p>录一段想说的话，把声音也留在毕业相册里。</p>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
+
+  <a class="feature-card" href="video-blessing.html">
+    <div class="feature-icon">🎬</div>
+    <h3>视频祝福</h3>
+    <p>录制或上传一段祝福，给多年后的我们。</p>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
+
+  <a class="feature-card" href="random-memory.html">
+    <div class="feature-icon">🎲</div>
+    <h3>随机回忆</h3>
+    <p>随机打开一张照片，遇见意想不到的青春瞬间。</p>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
+</section>
+
+<section class="section gallery-shell" id="gallery">
+  <div class="section-head gallery-head-compact">
+    <div>
+      <h2 class="section-title">精选纪念瞬间</h2>
+      <p class="section-desc">默认展示少量精选照片，点击“查看更多”后展开全部回忆。</p>
+    </div>
+    <button class="more" id="viewAllBtn" type="button">查看更多 ›</button>
+  </div>
+
+  <div class="gallery-grid" id="mainGallery">
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4817_thumb.webp" data-preview="photos_v2/large/DSC4817_large.webp" data-original="images/DSC4817.JPG" alt="毕业照1">
+      <figcaption class="caption">毕业照1</figcaption>
+    </figure>
+
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4831_thumb.webp" data-preview="photos_v2/large/DSC4831_large.webp" data-original="images/DSC4831.JPG" alt="毕业照2">
+      <figcaption class="caption">毕业照2</figcaption>
+    </figure>
+
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4835_thumb.webp" data-preview="photos_v2/large/DSC4835_large.webp" data-original="images/DSC4835.JPG" alt="毕业照3">
+      <figcaption class="caption">毕业照3</figcaption>
+    </figure>
+
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4841_thumb.webp" data-preview="photos_v2/large/DSC4841_large.webp" data-original="images/DSC4841.JPG" alt="毕业照4">
+      <figcaption class="caption">毕业照4</figcaption>
+    </figure>
+
+    <figure class="photo-card">
+      <img src="photos_v2/thumb/DSC4844_thumb.webp" data-preview="photos_v2/large/DSC4844_large.webp" data-original="images/DSC4844.JPG" alt="毕业照5">
+      <figcaption class="caption">毕业照5</figcaption>
+    </figure>
+    <figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4852_thumb.webp" data-preview="photos_v2/large/DSC4852_large.webp" data-original="images/DSC4852.JPG" alt="毕业照6"><figcaption class="caption">毕业照6</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4853_thumb.webp" data-preview="photos_v2/large/DSC4853_large.webp" data-original="images/DSC4853.JPG" alt="毕业照7"><figcaption class="caption">毕业照7</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4854_thumb.webp" data-preview="photos_v2/large/DSC4854_large.webp" data-original="images/DSC4854.JPG" alt="毕业照8"><figcaption class="caption">毕业照8</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4857_thumb.webp" data-preview="photos_v2/large/DSC4857_large.webp" data-original="images/DSC4857.JPG" alt="毕业照9"><figcaption class="caption">毕业照9</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4858_thumb.webp" data-preview="photos_v2/large/DSC4858_large.webp" data-original="images/DSC4858.JPG" alt="毕业照10"><figcaption class="caption">毕业照10</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4861_thumb.webp" data-preview="photos_v2/large/DSC4861_large.webp" data-original="images/DSC4861.JPG" alt="毕业照11"><figcaption class="caption">毕业照11</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4862_thumb.webp" data-preview="photos_v2/large/DSC4862_large.webp" data-original="images/DSC4862.JPG" alt="毕业照12"><figcaption class="caption">毕业照12</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4863_thumb.webp" data-preview="photos_v2/large/DSC4863_large.webp" data-original="images/DSC4863.JPG" alt="毕业照13"><figcaption class="caption">毕业照13</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4864_thumb.webp" data-preview="photos_v2/large/DSC4864_large.webp" data-original="images/DSC4864.JPG" alt="毕业照14"><figcaption class="caption">毕业照14</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4866_thumb.webp" data-preview="photos_v2/large/DSC4866_large.webp" data-original="images/DSC4866.JPG" alt="毕业照15"><figcaption class="caption">毕业照15</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4868_thumb.webp" data-preview="photos_v2/large/DSC4868_large.webp" data-original="images/DSC4868.JPG" alt="毕业照16"><figcaption class="caption">毕业照16</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4869_thumb.webp" data-preview="photos_v2/large/DSC4869_large.webp" data-original="images/DSC4869.JPG" alt="毕业照17"><figcaption class="caption">毕业照17</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4872_thumb.webp" data-preview="photos_v2/large/DSC4872_large.webp" data-original="images/DSC4872.JPG" alt="毕业照18"><figcaption class="caption">毕业照18</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4873_thumb.webp" data-preview="photos_v2/large/DSC4873_large.webp" data-original="images/DSC4873.JPG" alt="毕业照19"><figcaption class="caption">毕业照19</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4874_thumb.webp" data-preview="photos_v2/large/DSC4874_large.webp" data-original="images/DSC4874.JPG" alt="毕业照20"><figcaption class="caption">毕业照20</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4880_thumb.webp" data-preview="photos_v2/large/DSC4880_large.webp" data-original="images/DSC4880.JPG" alt="毕业照21"><figcaption class="caption">毕业照21</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4892_thumb.webp" data-preview="photos_v2/large/DSC4892_large.webp" data-original="images/DSC4892.JPG" alt="毕业照22"><figcaption class="caption">毕业照22</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4893_thumb.webp" data-preview="photos_v2/large/DSC4893_large.webp" data-original="images/DSC4893.JPG" alt="毕业照23"><figcaption class="caption">毕业照23</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4897_thumb.webp" data-preview="photos_v2/large/DSC4897_large.webp" data-original="images/DSC4897.JPG" alt="毕业照24"><figcaption class="caption">毕业照24</figcaption></figure>
+<figure class="photo-card extra-photo"><img src="photos_v2/thumb/DSC4899_thumb.webp" data-preview="photos_v2/large/DSC4899_large.webp" data-original="images/DSC4899.JPG" alt="毕业照25"><figcaption class="caption">毕业照25</figcaption></figure>
+  </div>
+</section>
+
+<section class="section" id="timeline">
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">毕业时光轴</h2>
+      <p class="section-desc">从初入校园到毕业典礼，每一步都算数</p>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <strong>初入校园</strong>
+      <span>2019.09 · 我们在这里相遇</span>
+    </div>
+    <div class="timeline-item">
+      <strong>军训时光</strong>
+      <span>汗水与欢笑都值得记住</span>
+    </div>
+    <div class="timeline-item">
+      <strong>迎新晚会</strong>
+      <span>第一次站上舞台</span>
+    </div>
+    <div class="timeline-item">
+      <strong>图书馆夜晚</strong>
+      <span>为梦想拼搏的日子</span>
+    </div>
+    <div class="timeline-item">
+      <strong>毕业旅行</strong>
+      <span>一起去看海吧</span>
+    </div>
+    <div class="timeline-item">
+      <strong>毕业典礼</strong>
+      <span>未来可期，顶峰相见</span>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<form class="barrage-bar" id="barrageForm">
+  <div class="barrage-label">✈ 今日弹幕墙</div>
+  <input id="barrageInput" type="text" maxlength="60" placeholder="输入你想说的话...毕业快乐！">
+  <button id="danmakuModeBtn" class="danmaku-mode-btn" type="button">侧边显示</button>
+  <button type="submit">发送</button>
+</form>
+
+<div class="lightbox" id="lightbox">
+  <button class="close" id="closeBtn">×</button>
+
+  <div class="lightbox-panel">
+    <div class="lightbox-preview-wrap">
+      <img id="lightboxImg" class="lightbox-preview" src="" alt="照片预览">
+    </div>
+
+    <aside class="lightbox-info">
+      <p class="modal-tag" id="photoSourceText">官方相册</p>
+      <h3 id="photoTitle">照片标题</h3>
+      <p id="photoMessage" class="photo-message">点击照片后会在这里显示上传者和留言。</p>
+
+      <div class="modal-actions">
+        <button id="likeBtn" class="like-btn" type="button">♡ 点赞 <span id="likeCount">0</span></button>
+        <a id="downloadBtn" class="download-btn" href="" download>下载原图</a>
+      </div>
+
+      <div class="modal-block">
+        <h4>信息留言</h4>
+        <form id="photoCommentForm" class="photo-comment-form">
+          <input id="photoCommentInput" maxlength="80" placeholder="给这张照片留一句话">
+          <button type="submit">留言</button>
+        </form>
+        <div id="photoCommentList" class="comment-list"></div>
+      </div>
+
+      <div class="modal-block">
+        <h4>语音留言</h4>
+        <p class="modal-hint">语音留言会先保存在当前浏览器，本地测试够用；后续接 Cloudflare 后端后可改成云端保存。</p>
+        <div class="voice-actions">
+          <button id="voiceRecordBtn" type="button">开始录音</button>
+          <span id="voiceStatus">未录音</span>
+        </div>
+        <div id="voiceList" class="voice-list"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer id="about">
+  <p>Graduation Album · 把青春留在镜头里，把这一刻留给未来</p>
+</footer>
+
+<script>
+  const SITE_CONFIG = {
+    /*
+      自定义封面方法：
+      1. 默认改这里，例如：
+         heroCoverImage: "photos_v2/large/DSC5050_large.webp"
+      2. 临时测试可以在网址后面加：
+         ?cover=photos_v2/large/DSC4899_large.webp
+      3. 网址参数测试成功后，会自动记到本机 localStorage。
+    */
+    heroCoverImage: "photos_v2/large/DSC5052_large.webp"
+  };
+
+  const bgm = document.getElementById("bgm");
+  const surpriseBtn = document.getElementById("surpriseBtn");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+  const closeBtn = document.getElementById("closeBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const photoSourceText = document.getElementById("photoSourceText");
+  const photoTitle = document.getElementById("photoTitle");
+  const photoMessage = document.getElementById("photoMessage");
+  const likeBtn = document.getElementById("likeBtn");
+  const likeCount = document.getElementById("likeCount");
+  const photoCommentForm = document.getElementById("photoCommentForm");
+  const photoCommentInput = document.getElementById("photoCommentInput");
+  const photoCommentList = document.getElementById("photoCommentList");
+  const voiceRecordBtn = document.getElementById("voiceRecordBtn");
+  const voiceStatus = document.getElementById("voiceStatus");
+  const voiceList = document.getElementById("voiceList");
+  const barrageForm = document.getElementById("barrageForm");
+  const barrageInput = document.getElementById("barrageInput");
+  const danmakuModeBtn = document.getElementById("danmakuModeBtn");
+  const fullscreenDanmakuLayer = null;
+  const partialDanmakuLayer = document.getElementById("partialDanmakuLayer");
+  const pendingCountEl = document.getElementById("pendingCount");
+  const approvedCountEl = document.getElementById("approvedCount");
+  const memoryCountEl = document.getElementById("memoryCount");
+  const visitCountEl = document.getElementById("visitCount");
+  const viewAllBtn = document.getElementById("viewAllBtn");
+  const mainGallery = document.getElementById("mainGallery");
+
+  let isPlaying = false;
+  let danmakuMode = "partial";
+  let danmakuTimer = null;
+  let danmakuIndex = 0;
+  let danmakuMessages = [
+    { name: "刘涵", message: "毕业快乐，未来可期！" },
+    { name: "同学", message: "时光不老，我们不散。" },
+    { name: "匿名", message: "愿此去繁花似锦，再相逢依旧如故。" },
+    { name: "小橘子", message: "顶峰相见！" },
+    { name: "可可", message: "青春不散场，梦想正起航。" }
+  ];
+  let currentPhoto = null;
+  let mediaRecorder = null;
+  let voiceChunks = [];
+  let recordingTimer = null;
+
+  function applyCustomCover() {
+    const params = new URLSearchParams(window.location.search);
+    const coverFromUrl = params.get("cover");
+    const savedCover = localStorage.getItem("albumHeroCover");
+    const cover = coverFromUrl || savedCover || SITE_CONFIG.heroCoverImage;
+    if (coverFromUrl) localStorage.setItem("albumHeroCover", coverFromUrl);
+    document.documentElement.style.setProperty("--hero-cover", `url("${cover}")`);
+  }
+
+  function formatNumber(value) {
+    if (typeof value !== "number" || Number.isNaN(value)) return "--";
+    return value.toLocaleString("zh-CN");
+  }
+
+  function getStaticPhotoCount() {
+    return document.querySelectorAll("#mainGallery .photo-card:not(.approved-photo)").length;
+  }
+
+  function safeText(value, fallback) {
+    const text = String(value || "").trim();
+    return text || fallback;
+  }
+
+  async function playMusic() {
+    try {
+      await bgm.play();
+      isPlaying = true;
+      surpriseBtn.classList.add("playing");
+      surpriseBtn.textContent = "惊喜播放中 ♪";
+    } catch (err) {
+      alert("浏览器需要你点击按钮后才能播放音乐。");
+      console.error("音乐播放失败：", err);
+    }
+  }
+
+  function pauseMusic() {
+    bgm.pause();
+    isPlaying = false;
+    surpriseBtn.classList.remove("playing");
+    surpriseBtn.textContent = "✨ 点击有惊喜";
+  }
+
+  if (surpriseBtn && bgm) {
+    surpriseBtn.addEventListener("click", function () {
+      if (isPlaying) pauseMusic(); else playMusic();
+    });
+  }
+
+  function storageKey(type, photoId) { return `graduationAlbum:${type}:${photoId}`; }
+  function readJson(key, fallback) { try { return JSON.parse(localStorage.getItem(key) || "") || fallback; } catch (err) { return fallback; } }
+  function writeJson(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+  function getLikeValue(photoId) { const value = Number(localStorage.getItem(storageKey("likes", photoId)) || 0); return Number.isFinite(value) ? value : 0; }
+  function setLikeValue(photoId, value) { localStorage.setItem(storageKey("likes", photoId), String(value)); }
+  function getComments(photoId) { return readJson(storageKey("comments", photoId), []); }
+  function setComments(photoId, comments) { writeJson(storageKey("comments", photoId), comments.slice(0, 30)); }
+  function getVoices(photoId) { return readJson(storageKey("voices", photoId), []); }
+  function setVoices(photoId, voices) { writeJson(storageKey("voices", photoId), voices.slice(0, 5)); }
+
+  function inferStaticIndex(img, index) {
+    const match = (img.alt || "").match(/\d+/);
+    return match ? match[0] : String(index + 1);
+  }
+
+  function prepareStaticGallery() {
+    const staticImgs = document.querySelectorAll("#mainGallery .photo-card:not(.approved-photo) img");
+    staticImgs.forEach(function (img, index) {
+      const figure = img.closest(".photo-card");
+      const photoIndex = inferStaticIndex(img, index);
+      const title = `毕业照${photoIndex}`;
+      const uploader = "官方相册";
+      const message = "把青春留在镜头里，把这一刻留给未来。";
+      figure.dataset.photoId = `static-${photoIndex}`;
+      figure.dataset.source = "官方相册";
+      figure.dataset.uploader = uploader;
+      figure.dataset.message = message;
+      figure.dataset.title = title;
+      const caption = figure.querySelector(".caption");
+      if (caption) caption.innerHTML = `<strong>${uploader}</strong><span>${title}</span>`;
+    });
+  }
+
+  function getPhotoFromFigure(figure) {
+    const img = figure.querySelector("img");
+    const original = img.dataset.original || img.src;
+    const preview = img.dataset.preview || img.src;
+    return {
+      id: figure.dataset.photoId || original || img.src,
+      title: figure.dataset.title || img.alt || "毕业照片",
+      uploader: figure.dataset.uploader || "官方相册",
+      message: figure.dataset.message || "",
+      source: figure.dataset.source || "官方相册",
+      preview,
+      original,
+      download: figure.dataset.download || original
+    };
+  }
+
+  function bindGalleryCard(figure) {
+    const img = figure.querySelector("img");
+    if (!img || figure.dataset.bound === "1") return;
+    figure.dataset.bound = "1";
+    img.addEventListener("click", function () { openPhotoModal(getPhotoFromFigure(figure)); });
+  }
+
+  function bindAllGalleryCards() { document.querySelectorAll("#mainGallery .photo-card").forEach(bindGalleryCard); }
+
+  function openPhotoModal(photo) {
+    currentPhoto = photo;
+    lightboxImg.src = photo.preview;
+    downloadBtn.href = photo.download;
+    downloadBtn.setAttribute("download", photo.download.split("/").pop() || "photo.jpg");
+    photoSourceText.textContent = `${photo.source} · ${photo.uploader}`;
+    photoTitle.textContent = photo.title;
+    photoMessage.textContent = photo.message || "这张照片还没有留言。";
+    renderPhotoStats();
+    renderPhotoComments();
+    renderVoiceList();
+    lightbox.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove("show");
+    lightboxImg.src = "";
+    downloadBtn.href = "";
+    currentPhoto = null;
+    document.body.style.overflow = "";
+  }
+
+  function renderPhotoStats() { if (currentPhoto) likeCount.textContent = formatNumber(getLikeValue(currentPhoto.id)); }
+
+  function renderPhotoComments() {
+    if (!currentPhoto) return;
+    const comments = getComments(currentPhoto.id);
+    photoCommentList.innerHTML = "";
+    if (!comments.length) { photoCommentList.innerHTML = '<p class="empty-note">还没有信息留言。</p>'; return; }
+    comments.forEach(function (item) {
+      const div = document.createElement("div");
+      div.className = "comment-item";
+      div.textContent = `${item.time} · ${item.text}`;
+      photoCommentList.appendChild(div);
+    });
+  }
+
+  function renderVoiceList() {
+    if (!currentPhoto) return;
+    const voices = getVoices(currentPhoto.id);
+    voiceList.innerHTML = "";
+    if (!voices.length) { voiceList.innerHTML = '<p class="empty-note">还没有语音留言。</p>'; return; }
+    voices.forEach(function (item) {
+      const wrap = document.createElement("div");
+      wrap.className = "voice-item";
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.src = item.dataUrl;
+      const text = document.createElement("span");
+      text.textContent = item.time;
+      wrap.appendChild(audio);
+      wrap.appendChild(text);
+      voiceList.appendChild(wrap);
+    });
+  }
+
+  likeBtn.addEventListener("click", function () {
+    if (!currentPhoto) return;
+    const next = getLikeValue(currentPhoto.id) + 1;
+    setLikeValue(currentPhoto.id, next);
+    renderPhotoStats();
+  });
+
+  photoCommentForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!currentPhoto) return;
+    const text = photoCommentInput.value.trim();
+    if (!text) return;
+    const comments = getComments(currentPhoto.id);
+    comments.unshift({ text, time: new Date().toLocaleString() });
+    setComments(currentPhoto.id, comments);
+    photoCommentInput.value = "";
+    renderPhotoComments();
+  });
+
+  function blobToDataUrl(blob) {
+    return new Promise(function (resolve, reject) {
+      const reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function startVoiceRecord() {
+    if (!currentPhoto) { alert("请先打开一张照片。"); return; }
+    if (!navigator.mediaDevices || !window.MediaRecorder) { alert("当前浏览器不支持录音功能。可以先使用文字留言。"); return; }
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    voiceChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = function (e) { if (e.data && e.data.size > 0) voiceChunks.push(e.data); };
+    mediaRecorder.onstop = async function () {
+      stream.getTracks().forEach(function (track) { track.stop(); });
+      clearTimeout(recordingTimer);
+      const blob = new Blob(voiceChunks, { type: "audio/webm" });
+      const dataUrl = await blobToDataUrl(blob);
+      const voices = getVoices(currentPhoto.id);
+      voices.unshift({ dataUrl, time: new Date().toLocaleString() });
+      try { setVoices(currentPhoto.id, voices); }
+      catch (err) { alert("这段录音太大，浏览器本地存不下。可以录短一点，或后续接云端存储。"); }
+      mediaRecorder = null;
+      voiceRecordBtn.textContent = "开始录音";
+      voiceStatus.textContent = "录音已保存";
+      renderVoiceList();
+    };
+    mediaRecorder.start();
+    voiceRecordBtn.textContent = "停止录音";
+    voiceStatus.textContent = "正在录音，最长 20 秒";
+    recordingTimer = setTimeout(function () { if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop(); }, 20000);
+  }
+
+  voiceRecordBtn.addEventListener("click", async function () {
+    try {
+      if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+      else await startVoiceRecord();
+    } catch (err) {
+      console.error("录音失败：", err);
+      voiceStatus.textContent = "录音失败";
+    }
+  });
+
+  closeBtn.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", function (e) { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLightbox(); });
+
+  function cloudinaryTransform(url, transform) {
+    if (!url || !url.includes("/upload/")) return url || "";
+    return url.replace("/upload/", `/upload/${transform}/`);
+  }
+
+  function appendApprovedPhoto(photo) {
+    if (!photo.secure_url) return;
+    const thumb = cloudinaryTransform(photo.secure_url, "c_limit,w_520,q_auto:eco,f_auto");
+    const preview = cloudinaryTransform(photo.secure_url, "c_limit,w_1800,q_auto:good,f_auto");
+    const download = cloudinaryTransform(photo.secure_url, "fl_attachment");
+    const name = safeText(photo.name, "匿名");
+    const message = safeText(photo.message, "这位同学暂时没有留下文字。");
+    const title = `${name}的投稿`;
+    const figure = document.createElement("figure");
+    figure.className = "photo-card extra-photo approved-photo";
+    figure.dataset.photoId = `approved-${photo.id || photo.public_id || Date.now()}`;
+    figure.dataset.source = "同学投稿";
+    figure.dataset.uploader = name;
+    figure.dataset.message = message;
+    figure.dataset.title = title;
+    figure.dataset.download = download;
+    const img = document.createElement("img");
+    img.src = thumb;
+    img.dataset.preview = preview;
+    img.dataset.original = download;
+    img.alt = title;
+    const caption = document.createElement("figcaption");
+    caption.className = "caption";
+    caption.innerHTML = `<strong>${name}</strong><span>${message}</span>`;
+    figure.appendChild(img);
+    figure.appendChild(caption);
+    mainGallery.appendChild(figure);
+    bindGalleryCard(figure);
+  }
+
+  async function loadApprovedPhotos() {
+    try {
+      const res = await fetch("/api/list-approved?t=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) return null;
+      const photos = await res.json();
+      if (!Array.isArray(photos) || photos.length === 0) return 0;
+      photos.forEach(appendApprovedPhoto);
+      return photos.length;
+    } catch (err) {
+      console.log("动态投稿暂未加载：", err);
+      return null;
+    }
+  }
+
+  async function loadAlbumStats(approvedCountFromGallery) {
+    const staticPhotoCount = getStaticPhotoCount();
+    const fallbackApprovedCount = typeof approvedCountFromGallery === "number" ? approvedCountFromGallery : null;
+    memoryCountEl.textContent = formatNumber(staticPhotoCount + (fallbackApprovedCount || 0));
+    pendingCountEl.textContent = "--";
+    approvedCountEl.textContent = fallbackApprovedCount === null ? "--" : formatNumber(fallbackApprovedCount);
+    visitCountEl.textContent = "--";
+    try {
+      const res = await fetch("/api/album-stats?t=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) return;
+      const data = await res.json();
+      const pendingCount = typeof data.pendingCount === "number" ? data.pendingCount : null;
+      const approvedCount = typeof data.approvedCount === "number" ? data.approvedCount : fallbackApprovedCount;
+      const visitCount = typeof data.visitCount === "number" ? data.visitCount : null;
+      pendingCountEl.textContent = pendingCount === null ? "--" : formatNumber(pendingCount);
+      approvedCountEl.textContent = approvedCount === null ? "--" : formatNumber(approvedCount);
+      memoryCountEl.textContent = formatNumber(staticPhotoCount + (approvedCount || 0));
+      visitCountEl.textContent = visitCount === null ? "--" : formatNumber(visitCount);
+      if (Array.isArray(data.messages) && data.messages.length) {
+        const remoteMessages = data.messages.filter(function (item) { return item && item.message && String(item.message).trim(); });
+        if (remoteMessages.length) {
+          danmakuMessages = remoteMessages.concat(danmakuMessages);
+          startDanmaku();
+        }
+      }
+    } catch (err) { console.log("统计接口暂未接入：", err); }
+  }
+
+  function getCurrentDanmakuLayer() { return partialDanmakuLayer; }
+  function makeDanmakuText(item) { return `${item.name || "匿名"}：${item.message || ""}`; }
+  function createDanmaku(item) {
+    if (!item || !item.message || !String(item.message).trim()) return;
+    const layer = getCurrentDanmakuLayer();
+    if (!layer) return;
+    const el = document.createElement("div");
+    el.className = "danmaku-item";
+    el.textContent = makeDanmakuText(item);
+    const layerHeight = layer.clientHeight || 420;
+    const minTop = 8;
+    const maxTop = Math.max(minTop + 20, layerHeight - 50);
+    el.style.top = (minTop + Math.random() * (maxTop - minTop)) + "px";
+    el.style.animationDuration = (12 + Math.random() * 8) + "s";
+    layer.appendChild(el);
+    setTimeout(function () { if (el && el.parentNode) el.parentNode.removeChild(el); }, 23000);
+  }
+  function clearDanmakuLayers() { if (fullscreenDanmakuLayer) fullscreenDanmakuLayer.innerHTML = ""; if (partialDanmakuLayer) partialDanmakuLayer.innerHTML = ""; }
+  function startDanmaku() {
+    if (danmakuTimer) { clearInterval(danmakuTimer); danmakuTimer = null; }
+    clearDanmakuLayers();
+    if (!danmakuMessages.length) return;
+    danmakuMessages.slice(0, 6).forEach(function (item, index) { setTimeout(function () { createDanmaku(item); }, index * 650); });
+    danmakuTimer = setInterval(function () {
+      if (!danmakuMessages.length) return;
+      const item = danmakuMessages[danmakuIndex % danmakuMessages.length];
+      danmakuIndex += 1;
+      createDanmaku(item);
+    }, 1700);
+  }
+  function updateDanmakuMode() {
+    const wall = document.getElementById("starRiver");
+    if (partialDanmakuLayer) partialDanmakuLayer.classList.remove("hidden");
+
+    if (danmakuMode === "hidden") {
+      if (wall) wall.classList.add("wall-hidden");
+      if (danmakuModeBtn) danmakuModeBtn.textContent = "显示留言";
+      if (danmakuTimer) { clearInterval(danmakuTimer); danmakuTimer = null; }
+      clearDanmakuLayers();
+      return;
+    }
+
+    if (wall) wall.classList.remove("wall-hidden");
+    if (danmakuModeBtn) danmakuModeBtn.textContent = "隐藏留言";
+    startDanmaku();
+  }
+
+  if (danmakuModeBtn) {
+    danmakuModeBtn.addEventListener("click", function () {
+      danmakuMode = danmakuMode === "hidden" ? "partial" : "hidden";
+      updateDanmakuMode();
+    });
+  }
+
+  barrageForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const message = barrageInput.value.trim();
+    if (!message) { alert("先写一句留言吧。"); return; }
+    const item = { name: "你", message };
+    danmakuMessages.unshift(item);
+    if (danmakuMode === "hidden") { danmakuMode = "partial"; updateDanmakuMode(); }
+    createDanmaku(item);
+    barrageInput.value = "";
+    try {
+      await fetch("/api/submit-barrage?t=" + Date.now(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "匿名", message })
+      });
+    } catch (err) { console.log("弹幕接口暂未接入：", err); }
+  });
+
+  if (viewAllBtn && mainGallery) {
+    viewAllBtn.addEventListener("click", function () {
+      mainGallery.classList.toggle("show-all");
+      if (mainGallery.classList.contains("show-all")) viewAllBtn.textContent = "收起照片 ↑";
+      else { viewAllBtn.textContent = "查看更多 ›"; mainGallery.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    });
+  }
+
+  async function initPage() {
+    applyCustomCover();
+    prepareStaticGallery();
+    bindAllGalleryCards();
+    updateDanmakuMode();
+    const approvedCount = await loadApprovedPhotos();
+    await loadAlbumStats(approvedCount);
+  }
+
+  initPage();
+</script>
+
+</body>
+</html>
