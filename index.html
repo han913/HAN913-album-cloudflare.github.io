@@ -445,6 +445,41 @@
       line-height: 1.6;
     }
 
+
+    .feature-card {
+      color: inherit;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 58px rgba(95, 62, 26, 0.22);
+      border-color: rgba(216, 148, 53, 0.32);
+    }
+
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      right: -28px;
+      bottom: -34px;
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 186, 90, 0.22), transparent 68%);
+      pointer-events: none;
+    }
+
+    .feature-link {
+      display: inline-flex;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--gold-dark);
+    }
+
     .section {
       width: min(1180px, calc(100% - 36px));
       margin: 38px auto;
@@ -978,7 +1013,468 @@
       .lightbox-info { max-height: none; }
     }
 
-  </style>
+  
+
+    /* ===== 图片区域 UI 优化：更大、更舒展、手机端适配 ===== */
+    .section {
+      width: min(1480px, calc(100% - 40px));
+    }
+
+    #gallery.section {
+      width: min(1580px, calc(100% - 32px));
+      margin-top: 46px;
+    }
+
+    #gallery .section-head {
+      padding: 0 4px;
+      margin-bottom: 24px;
+    }
+
+    #gallery .section-title {
+      font-size: clamp(30px, 3.2vw, 44px);
+    }
+
+    #gallery .section-desc {
+      font-size: 15px;
+    }
+
+    #mainGallery.gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+      align-items: stretch;
+      grid-auto-flow: dense;
+    }
+
+    #mainGallery .photo-card {
+      min-height: unset;
+      aspect-ratio: 4 / 3;
+      border-radius: 26px;
+      background: rgba(255, 248, 238, 0.72);
+      box-shadow: 0 20px 46px rgba(80, 52, 24, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.65);
+    }
+
+    #mainGallery .photo-card img {
+      height: 100%;
+      min-height: 0;
+    }
+
+    #mainGallery .photo-card .caption {
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      background: linear-gradient(180deg, rgba(40, 25, 15, 0.18), rgba(40, 25, 15, 0.62));
+    }
+
+    #mainGallery .photo-card:nth-child(1) {
+      grid-column: span 2;
+      grid-row: span 2;
+      aspect-ratio: auto;
+      min-height: 560px;
+    }
+
+    #mainGallery .photo-card:nth-child(2),
+    #mainGallery .photo-card:nth-child(3) {
+      aspect-ratio: 16 / 10;
+    }
+
+    #mainGallery .photo-card:nth-child(4),
+    #mainGallery .photo-card:nth-child(5) {
+      aspect-ratio: 1 / 1;
+    }
+
+    #mainGallery.show-all .extra-photo {
+      display: block;
+    }
+
+    @media (min-width: 1500px) {
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+        gap: 28px;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        min-height: 620px;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      #gallery.section,
+      .section {
+        width: min(1120px, calc(100% - 28px));
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 18px;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        min-height: 460px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      #gallery.section,
+      .section {
+        width: calc(100% - 24px);
+      }
+
+      #gallery .section-head {
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5) {
+        grid-column: auto;
+        grid-row: auto;
+        min-height: unset;
+        aspect-ratio: 4 / 3;
+        border-radius: 22px;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        grid-column: span 2;
+        aspect-ratio: 16 / 9;
+        min-height: unset;
+      }
+
+      #mainGallery .photo-card .caption {
+        font-size: 13px;
+        padding: 10px 12px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      #gallery.section,
+      .section {
+        width: calc(100% - 20px);
+        margin: 30px auto;
+      }
+
+      #gallery .section-head {
+        display: block;
+        margin-bottom: 16px;
+      }
+
+      #gallery .more {
+        margin-top: 12px;
+        width: 100%;
+        height: 44px;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(1),
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5) {
+        grid-column: auto;
+        grid-row: auto;
+        aspect-ratio: 4 / 3;
+        min-height: unset;
+        border-radius: 20px;
+      }
+
+      #mainGallery .photo-card .caption {
+        font-size: 13px;
+      }
+    }
+
+  
+
+    /* ===== 相册瀑布/拼贴布局 V2：展开后也保持不规则，手机端自适应多列 ===== */
+    #gallery.section {
+      width: min(1680px, calc(100% - 28px));
+    }
+
+    #mainGallery.gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(14px, 1.35vw, 24px);
+      align-items: stretch;
+      grid-auto-flow: dense;
+    }
+
+    #mainGallery .photo-card {
+      grid-column: span 3;
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+      border-radius: clamp(18px, 1.7vw, 28px);
+    }
+
+    #mainGallery .photo-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+    }
+
+    /* 非展开状态的精选区：第一张大卡，其余交错 */
+    #mainGallery .photo-card:nth-child(1) {
+      grid-column: span 6;
+      grid-row: span 2;
+      aspect-ratio: auto;
+      min-height: clamp(440px, 38vw, 650px);
+    }
+
+    #mainGallery .photo-card:nth-child(2),
+    #mainGallery .photo-card:nth-child(3) {
+      grid-column: span 3;
+      aspect-ratio: 16 / 10;
+    }
+
+    #mainGallery .photo-card:nth-child(4),
+    #mainGallery .photo-card:nth-child(5) {
+      grid-column: span 3;
+      aspect-ratio: 1 / 1;
+    }
+
+    /* 展开后：后续照片也进入类似拼贴的不规则排布，而不是一排小方块 */
+    #mainGallery.show-all .extra-photo {
+      display: block;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(n+6) {
+      grid-column: span 3;
+      grid-row: auto;
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+6) {
+      grid-column: span 4;
+      aspect-ratio: 16 / 10;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+7) {
+      grid-column: span 3;
+      aspect-ratio: 1 / 1;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+8) {
+      grid-column: span 5;
+      aspect-ratio: 16 / 9;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+9) {
+      grid-column: span 3;
+      aspect-ratio: 4 / 5;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+10) {
+      grid-column: span 4;
+      aspect-ratio: 4 / 3;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+11) {
+      grid-column: span 5;
+      aspect-ratio: 3 / 2;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+12) {
+      grid-column: span 3;
+      aspect-ratio: 1 / 1;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+13) {
+      grid-column: span 4;
+      aspect-ratio: 5 / 4;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+14) {
+      grid-column: span 5;
+      aspect-ratio: 16 / 10;
+    }
+
+    #mainGallery.show-all .photo-card:nth-child(10n+15) {
+      grid-column: span 3;
+      aspect-ratio: 4 / 3;
+    }
+
+    @media (min-width: 1500px) {
+      #mainGallery.gallery-grid {
+        gap: 26px;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      #gallery.section {
+        width: calc(100% - 24px);
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery.show-all .photo-card:nth-child(n+6) {
+        grid-column: span 2;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        grid-column: span 4;
+        min-height: clamp(360px, 42vw, 520px);
+      }
+
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5) {
+        grid-column: span 2;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(8n+6) {
+        grid-column: span 3;
+        aspect-ratio: 16 / 10;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(8n+7) {
+        grid-column: span 2;
+        aspect-ratio: 1 / 1;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(8n+8) {
+        grid-column: span 3;
+        aspect-ratio: 3 / 2;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(8n+9) {
+        grid-column: span 2;
+        aspect-ratio: 4 / 5;
+      }
+    }
+
+    @media (max-width: 760px) {
+      #gallery.section {
+        width: calc(100% - 18px);
+        margin-top: 32px;
+      }
+
+      #gallery .section-head {
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+      }
+
+      #gallery .more {
+        width: auto;
+        min-width: 108px;
+        height: 42px;
+        margin-top: 0;
+        padding: 0 14px;
+        white-space: nowrap;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5),
+      #mainGallery.show-all .photo-card:nth-child(n+6) {
+        grid-column: span 3;
+        grid-row: auto;
+        aspect-ratio: 1 / 1;
+        min-height: 0;
+        border-radius: 18px;
+      }
+
+      #mainGallery .photo-card:nth-child(1) {
+        grid-column: span 6;
+        aspect-ratio: 16 / 10;
+        min-height: 0;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(6n+6),
+      #mainGallery.show-all .photo-card:nth-child(6n+10) {
+        grid-column: span 6;
+        aspect-ratio: 16 / 9;
+      }
+
+      #mainGallery.show-all .photo-card:nth-child(6n+7),
+      #mainGallery.show-all .photo-card:nth-child(6n+8),
+      #mainGallery.show-all .photo-card:nth-child(6n+9),
+      #mainGallery.show-all .photo-card:nth-child(6n+11) {
+        grid-column: span 3;
+        aspect-ratio: 1 / 1;
+      }
+
+      #mainGallery .photo-card .caption {
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        padding: 8px 10px;
+        font-size: 12px;
+        border-radius: 12px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      #gallery.section {
+        width: calc(100% - 14px);
+      }
+
+      #gallery .section-head {
+        display: block;
+      }
+
+      #gallery .more {
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      #mainGallery.gallery-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      #mainGallery .photo-card,
+      #mainGallery .photo-card:nth-child(2),
+      #mainGallery .photo-card:nth-child(3),
+      #mainGallery .photo-card:nth-child(4),
+      #mainGallery .photo-card:nth-child(5),
+      #mainGallery.show-all .photo-card:nth-child(n+6) {
+        grid-column: span 2;
+        aspect-ratio: 1 / 1;
+        border-radius: 16px;
+      }
+
+      #mainGallery .photo-card:nth-child(1),
+      #mainGallery.show-all .photo-card:nth-child(6n+6),
+      #mainGallery.show-all .photo-card:nth-child(6n+10) {
+        grid-column: span 4;
+        aspect-ratio: 16 / 10;
+      }
+    }
+</style>
 </head>
 <body>
 
@@ -1042,35 +1538,40 @@
 </section>
 
 <section class="feature-row">
-  <article class="feature-card">
+  <a class="feature-card" href="time-capsule.html">
     <div class="feature-icon">⏳</div>
     <h3>时间胶囊</h3>
     <p>写给未来的一封信，把此刻的心愿藏进毕业时光里。</p>
-  </article>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
 
-  <article class="feature-card">
+  <a class="feature-card" href="ai-repair.html">
     <div class="feature-icon">🤖</div>
     <h3>AI照片修复</h3>
-    <p>后续可接入照片增强，让模糊老照片重新清晰起来。</p>
-  </article>
+    <p>模拟照片增强、修复前后对比和智能配文入口。</p>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
 
-  <article class="feature-card">
+  <a class="feature-card" href="voice-message.html">
     <div class="feature-icon">🎙</div>
     <h3>语音留言</h3>
-    <p>用声音留下祝福，比文字多一点温度。</p>
-  </article>
+    <p>录一段想说的话，把声音也留在毕业相册里。</p>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
 
-  <article class="feature-card">
+  <a class="feature-card" href="video-blessing.html">
     <div class="feature-icon">🎬</div>
     <h3>视频祝福</h3>
-    <p>录下一段话，送给多年后的我们。</p>
-  </article>
+    <p>录制或上传一段祝福，给多年后的我们。</p>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
 
-  <article class="feature-card">
+  <a class="feature-card" href="random-memory.html">
     <div class="feature-icon">🎲</div>
     <h3>随机回忆</h3>
-    <p>随机打开一段照片回忆，遇见意想不到的青春瞬间。</p>
-  </article>
+    <p>随机打开一张照片，遇见意想不到的青春瞬间。</p>
+    <span class="feature-link">进入功能 ›</span>
+  </a>
 </section>
 
 <section class="section" id="gallery">
