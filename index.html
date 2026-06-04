@@ -2318,21 +2318,348 @@
   }
 }
 
+
+
+/* ===== 修正版：右侧固定贯穿式留言星河，封面不再出现弹幕 ===== */
+.danmaku-layer.fullscreen,
+#fullscreenDanmakuLayer {
+  display: none !important;
+}
+
+.fixed-star-river {
+  position: fixed !important;
+  top: 88px !important;
+  right: 16px !important;
+  bottom: 104px !important;
+  width: 320px !important;
+  z-index: 78 !important;
+  overflow: hidden !important;
+  border-radius: 30px !important;
+  color: #fff !important;
+  background:
+    radial-gradient(circle at 48% 24%, rgba(255, 180, 105, 0.42), transparent 30%),
+    linear-gradient(160deg, rgba(58, 45, 92, 0.96), rgba(23, 29, 58, 0.96) 58%, rgba(12, 18, 34, 0.97)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 24px 60px rgba(44, 29, 18, 0.22) !important;
+  backdrop-filter: blur(18px) !important;
+  transition: transform .25s ease, opacity .25s ease !important;
+}
+
+.fixed-star-river::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.8) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: .18;
+  pointer-events: none;
+}
+
+.fixed-star-river.wall-hidden {
+  transform: translateX(calc(100% + 24px)) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.fixed-wall-head {
+  position: relative !important;
+  z-index: 3 !important;
+  padding: 20px 20px 12px !important;
+  pointer-events: none !important;
+}
+
+.fixed-wall-head span {
+  display: block !important;
+  margin-bottom: 6px !important;
+  color: rgba(255,255,255,.58) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: .14em !important;
+}
+
+.fixed-wall-head strong {
+  display: block !important;
+  color: #fff7ec !important;
+  font-size: 24px !important;
+  font-family: "STKaiti", "KaiTi", "Microsoft YaHei", serif !important;
+}
+
+.fixed-wall-head em {
+  display: block !important;
+  margin-top: 8px !important;
+  color: rgba(255,255,255,.66) !important;
+  font-size: 13px !important;
+  font-style: normal !important;
+}
+
+.fixed-star-river .danmaku-layer.partial {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 104px !important;
+  bottom: 14px !important;
+  z-index: 2 !important;
+  display: block !important;
+  overflow: hidden !important;
+}
+
+.fixed-star-river .danmaku-item {
+  background: rgba(255,255,255,.16) !important;
+  border: 1px solid rgba(255,255,255,.20) !important;
+  color: #fff !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,.24) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18) !important;
+  font-size: 14px !important;
+  max-width: max-content !important;
+}
+
+@media (min-width: 1120px) {
+  body {
+    padding-right: 360px !important;
+  }
+
+  .topbar {
+    right: 360px !important;
+  }
+
+  .barrage-bar {
+    left: calc((100vw - 360px) / 2) !important;
+    width: min(820px, calc(100vw - 400px)) !important;
+  }
+}
+
+@media (max-width: 1119px) {
+  .fixed-star-river {
+    top: 82px !important;
+    right: 10px !important;
+    bottom: 110px !important;
+    width: min(285px, 38vw) !important;
+    border-radius: 24px !important;
+  }
+
+  .fixed-wall-head {
+    padding: 14px 14px 8px !important;
+  }
+
+  .fixed-wall-head strong {
+    font-size: 19px !important;
+  }
+
+  .fixed-wall-head em,
+  .fixed-wall-head span {
+    font-size: 11px !important;
+  }
+
+  .fixed-star-river .danmaku-layer.partial {
+    top: 84px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .fixed-star-river {
+    width: 128px !important;
+    top: 76px !important;
+    right: 7px !important;
+    bottom: 142px !important;
+    border-radius: 20px !important;
+    opacity: .94 !important;
+  }
+
+  .fixed-wall-head {
+    padding: 10px 9px 6px !important;
+  }
+
+  .fixed-wall-head span,
+  .fixed-wall-head em {
+    display: none !important;
+  }
+
+  .fixed-wall-head strong {
+    font-size: 15px !important;
+    line-height: 1.25 !important;
+  }
+
+  .fixed-star-river .danmaku-layer.partial {
+    top: 48px !important;
+    bottom: 10px !important;
+  }
+
+  .fixed-star-river .danmaku-item {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
+}
+
+/* 底部输入框在右侧留言墙存在时不再挤压，手机端自动换行 */
+.barrage-bar {
+  min-height: 68px !important;
+  padding: 10px !important;
+  grid-template-columns: auto minmax(220px, 1fr) auto auto !important;
+  border-radius: 26px !important;
+}
+
+.barrage-bar input {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+@media (max-width: 760px) {
+  body { padding-bottom: 154px !important; }
+  .barrage-bar {
+    bottom: 12px !important;
+    width: calc(100vw - 18px) !important;
+    left: 50% !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    border-radius: 22px !important;
+  }
+  .barrage-label {
+    display: flex !important;
+    grid-column: 1 / 3 !important;
+    justify-self: start !important;
+    height: 30px !important;
+    font-size: 12px !important;
+  }
+  .barrage-bar input {
+    grid-column: 1 / 3 !important;
+    height: 44px !important;
+    border-radius: 16px !important;
+  }
+  #danmakuModeBtn { grid-column: 1 / 2 !important; }
+  .barrage-bar button[type="submit"] { grid-column: 2 / 3 !important; }
+}
+
+
+
+/* ===== 最终修正：留言星河从首页下方开始，贯穿后续内容，不覆盖封面 ===== */
+.after-hero-layout {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 920px !important;
+  padding: 34px 360px 48px 0 !important;
+}
+
+.after-hero-content {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.after-hero-content > .feature-row {
+  margin-top: 0 !important;
+}
+
+.after-hero-layout .fixed-star-river {
+  position: absolute !important;
+  top: 34px !important;
+  right: 16px !important;
+  bottom: 48px !important;
+  width: 320px !important;
+  height: auto !important;
+  z-index: 12 !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.after-hero-layout .fixed-star-river.wall-hidden {
+  transform: translateX(calc(100% + 24px)) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.after-hero-layout .fixed-star-river .danmaku-layer.partial {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 104px !important;
+  bottom: 14px !important;
+  display: block !important;
+}
+
+@media (min-width: 1120px) {
+  body {
+    padding-right: 0 !important;
+  }
+
+  .topbar {
+    right: 0 !important;
+  }
+
+  .barrage-bar {
+    left: 50% !important;
+    width: min(880px, calc(100vw - 28px)) !important;
+  }
+}
+
+@media (max-width: 1119px) {
+  .after-hero-layout {
+    padding: 28px 310px 44px 0 !important;
+  }
+
+  .after-hero-layout .fixed-star-river {
+    top: 28px !important;
+    right: 10px !important;
+    bottom: 44px !important;
+    width: min(285px, 34vw) !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .after-hero-layout {
+    padding: 24px 0 36px !important;
+  }
+
+  .after-hero-content {
+    width: 100% !important;
+  }
+
+  .after-hero-layout .fixed-star-river {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: calc(100% - 24px) !important;
+    height: 320px !important;
+    margin: 0 auto 28px !important;
+    border-radius: 24px !important;
+  }
+
+  .after-hero-layout .fixed-star-river .danmaku-layer.partial {
+    top: 88px !important;
+    bottom: 12px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .after-hero-layout .fixed-star-river {
+    width: calc(100% - 18px) !important;
+    height: 260px !important;
+    border-radius: 20px !important;
+  }
+
+  .after-hero-layout .fixed-wall-head {
+    padding: 14px 14px 8px !important;
+  }
+
+  .after-hero-layout .fixed-wall-head strong {
+    font-size: 18px !important;
+  }
+
+  .after-hero-layout .fixed-wall-head em {
+    display: block !important;
+    font-size: 11px !important;
+  }
+
+  .after-hero-layout .fixed-star-river .danmaku-layer.partial {
+    top: 78px !important;
+  }
+}
+
 </style>
 </head>
 <body>
 
 <audio id="bgm" src="music/bgm.mp3" loop preload="auto"></audio>
-<div id="fullscreenDanmakuLayer" class="danmaku-layer fullscreen hidden"></div>
 
-<aside class="fixed-star-river" id="starRiver">
-  <div class="fixed-wall-head">
-    <span>MESSAGE WALL</span>
-    <strong>✨ 留言星河</strong>
-    <em>侧边常驻弹幕</em>
-  </div>
-  <div id="partialDanmakuLayer" class="danmaku-layer partial"></div>
-</aside>
 
 <header class="topbar">
   <a class="brand" href="#">
@@ -2389,6 +2716,18 @@
   </div>
 </div>
 </section>
+
+<main class="after-hero-layout" id="afterHeroLayout">
+  <aside class="fixed-star-river" id="starRiver">
+    <div class="fixed-wall-head">
+      <span>MESSAGE WALL</span>
+      <strong>✨ 留言星河</strong>
+      <em>从首页下方开始，贯穿后续内容</em>
+    </div>
+    <div id="partialDanmakuLayer" class="danmaku-layer partial"></div>
+  </aside>
+
+  <div class="after-hero-content">
 
 <section class="feature-row">
   <a class="feature-card" href="time-capsule.html">
@@ -2520,6 +2859,9 @@
   </div>
 </section>
 
+</div>
+</main>
+
 <form class="barrage-bar" id="barrageForm">
   <div class="barrage-label">✈ 今日弹幕墙</div>
   <input id="barrageInput" type="text" maxlength="60" placeholder="输入你想说的话...毕业快乐！">
@@ -2604,7 +2946,7 @@
   const barrageForm = document.getElementById("barrageForm");
   const barrageInput = document.getElementById("barrageInput");
   const danmakuModeBtn = document.getElementById("danmakuModeBtn");
-  const fullscreenDanmakuLayer = document.getElementById("fullscreenDanmakuLayer");
+  const fullscreenDanmakuLayer = null;
   const partialDanmakuLayer = document.getElementById("partialDanmakuLayer");
   const pendingCountEl = document.getElementById("pendingCount");
   const approvedCountEl = document.getElementById("approvedCount");
@@ -2938,7 +3280,7 @@
     } catch (err) { console.log("统计接口暂未接入：", err); }
   }
 
-  function getCurrentDanmakuLayer() { return danmakuMode === "fullscreen" ? fullscreenDanmakuLayer : partialDanmakuLayer; }
+  function getCurrentDanmakuLayer() { return partialDanmakuLayer; }
   function makeDanmakuText(item) { return `${item.name || "匿名"}：${item.message || ""}`; }
   function createDanmaku(item) {
     if (!item || !item.message || !String(item.message).trim()) return;
@@ -2947,8 +3289,8 @@
     const el = document.createElement("div");
     el.className = "danmaku-item";
     el.textContent = makeDanmakuText(item);
-    const layerHeight = layer === fullscreenDanmakuLayer ? window.innerHeight : layer.clientHeight;
-    const minTop = layer === fullscreenDanmakuLayer ? 80 : 8;
+    const layerHeight = layer.clientHeight || 420;
+    const minTop = 8;
     const maxTop = Math.max(minTop + 20, layerHeight - 50);
     el.style.top = (minTop + Math.random() * (maxTop - minTop)) + "px";
     el.style.animationDuration = (12 + Math.random() * 8) + "s";
@@ -2969,18 +3311,28 @@
     }, 1700);
   }
   function updateDanmakuMode() {
-    if (danmakuMode === "fullscreen") {
-      fullscreenDanmakuLayer.classList.remove("hidden");
-      partialDanmakuLayer.classList.add("hidden");
-      danmakuModeBtn.textContent = "全屏显示";
-    } else {
-      fullscreenDanmakuLayer.classList.add("hidden");
-      partialDanmakuLayer.classList.remove("hidden");
-      danmakuModeBtn.textContent = "侧边显示";
+    const wall = document.getElementById("starRiver");
+    if (partialDanmakuLayer) partialDanmakuLayer.classList.remove("hidden");
+
+    if (danmakuMode === "hidden") {
+      if (wall) wall.classList.add("wall-hidden");
+      if (danmakuModeBtn) danmakuModeBtn.textContent = "显示留言";
+      if (danmakuTimer) { clearInterval(danmakuTimer); danmakuTimer = null; }
+      clearDanmakuLayers();
+      return;
     }
+
+    if (wall) wall.classList.remove("wall-hidden");
+    if (danmakuModeBtn) danmakuModeBtn.textContent = "隐藏留言";
     startDanmaku();
   }
-  if (danmakuModeBtn) danmakuModeBtn.addEventListener("click", function () { danmakuMode = danmakuMode === "partial" ? "fullscreen" : "partial"; updateDanmakuMode(); });
+
+  if (danmakuModeBtn) {
+    danmakuModeBtn.addEventListener("click", function () {
+      danmakuMode = danmakuMode === "hidden" ? "partial" : "hidden";
+      updateDanmakuMode();
+    });
+  }
 
   barrageForm.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -2988,6 +3340,7 @@
     if (!message) { alert("先写一句留言吧。"); return; }
     const item = { name: "你", message };
     danmakuMessages.unshift(item);
+    if (danmakuMode === "hidden") { danmakuMode = "partial"; updateDanmakuMode(); }
     createDanmaku(item);
     barrageInput.value = "";
     try {
